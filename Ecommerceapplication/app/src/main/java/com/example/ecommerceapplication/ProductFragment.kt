@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.navigation.fragment.navArgs
 
 class ProductFragment : Fragment() {
 
@@ -19,7 +21,15 @@ class ProductFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.product_fragment, container, false)
+        val view = inflater.inflate(R.layout.product_fragment, container, false)
+        //val name = ProductFragmentArgs.fromBundle(arguments).productName
+        val args: ProductFragmentArgs by navArgs()
+
+        val name = args.productName
+        val productName = view.findViewById<TextView>(R.id.productName)
+        productName.text = name
+
+        return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -12,11 +12,17 @@
         tools:layout="@layout/category_fragment" >
         <action
             android:id="@+id/action_categoryFragment_to_productFragment"
-            app:destination="@id/productFragment" />
+            app:destination="@id/productFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:launchSingleTop="false" />
     </fragment>
     <fragment
         android:id="@+id/productFragment"
         android:name="com.example.ecommerceapplication.ProductFragment"
         android:label="product_fragment"
-        tools:layout="@layout/product_fragment" />
+        tools:layout="@layout/product_fragment" >
+        <argument
+            android:name="productName"
+            app:argType="string" />
+    </fragment>
 </navigation>

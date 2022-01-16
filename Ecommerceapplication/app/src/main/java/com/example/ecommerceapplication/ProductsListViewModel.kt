@@ -2,6 +2,6 @@ package com.example.ecommerceapplication
 
 import androidx.lifecycle.ViewModel
 
-class ProductViewModel : ViewModel() {
+class ProductsListViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

@@ -3,12 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProductFragment">
+    tools:context=".ProductsListFragment">
 
     <TextView
         android:id="@+id/productName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="Hello" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ProductsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/recycler_view_item_1" />
 
 </FrameLayout>

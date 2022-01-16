@@ -18,9 +18,9 @@
     </fragment>
     <fragment
         android:id="@+id/productFragment"
-        android:name="com.example.ecommerceapplication.ProductFragment"
+        android:name="com.example.ecommerceapplication.ProductsListFragment"
         android:label="product_fragment"
-        tools:layout="@layout/product_fragment" >
+        tools:layout="@layout/products_list_fragment" >
         <argument
             android:name="productName"
             app:argType="string" />

@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerViewAdapter(private val categories : kotlin.Array<String>, private val images : kotlin.Array<Int>) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class CategoryRecyclerViewAdapter(private val categories : kotlin.Array<String>, private val images : kotlin.Array<Int>) : RecyclerView.Adapter<CategoryRecyclerViewAdapter.ViewHolder>() {
     class ViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
         var itemText : TextView
         var itemImage : ImageView
@@ -32,12 +32,12 @@ class RecyclerViewAdapter(private val categories : kotlin.Array<String>, private
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): RecyclerViewAdapter.ViewHolder {
+    ): CategoryRecyclerViewAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item, parent, false)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: RecyclerViewAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CategoryRecyclerViewAdapter.ViewHolder, position: Int) {
         holder.itemText.text = categories[position]
         holder.itemImage.setImageResource(images[position])
     }

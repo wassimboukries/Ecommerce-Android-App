@@ -15,6 +15,10 @@ import com.example.ecommerceapplication.Model.CategoryModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.reflect.Array
+import org.json.JSONObject
+
+
+
 
 class CategoryFragment : Fragment() {
 
@@ -66,7 +70,9 @@ class CategoryFragment : Fragment() {
                 try {
                     // Parse result string JSON to data class
                     //categories = Klaxon().parse(result)
-                    Log.v(TAG, result)
+                    val json = JSONObject(result)
+                    val brandsList = json.getJSONArray("brands")
+                    Log.v(TAG, brandsList.toString())
                 }
                 catch(err:Error) {
                     print("Error when parsing JSON: "+err.localizedMessage)

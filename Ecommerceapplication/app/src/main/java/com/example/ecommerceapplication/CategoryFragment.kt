@@ -2,12 +2,19 @@ package com.example.ecommerceapplication
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.beust.klaxon.Klaxon
+import com.example.ecommerceapplication.Model.CategoryModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.reflect.Array
 
 class CategoryFragment : Fragment() {
 
@@ -15,6 +22,7 @@ class CategoryFragment : Fragment() {
         fun newInstance() = CategoryFragment()
     }
 
+    private val TAG = "Category"
     private lateinit var viewModel: CategoryViewModel
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapterCategory: RecyclerView.Adapter<CategoryRecyclerViewAdapter.ViewHolder>? = null
@@ -29,6 +37,8 @@ class CategoryFragment : Fragment() {
 
         val recyclerView : RecyclerView = view.findViewById(R.id.CategoryRecyclerView)
         recyclerView.layoutManager = layoutManager
+
+        fetch("")
 
         var categories = arrayOf("Informatique", "Beauté", "Hi-tech", "Bullshit", "Clothes", "Informatique", "Beauté", "Hi-tech", "Bullshit", "Clothes", "Beauté", "Hi-tech", "Bullshit", "Clothes" )
         var categoriesImages = arrayOf(R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24,
@@ -47,4 +57,25 @@ class CategoryFragment : Fragment() {
         // TODO: Use the ViewModel
     }
 
+    private fun fetch(sUrl: String): Array? {
+        var categories: Array? = null
+        lifecycleScope.launch(Dispatchers.IO) {
+            val myService = Service()
+            val result = myService.getCategoriesList()
+            if (result != null) {
+                try {
+                    // Parse result string JSON to data class
+                    //categories = Klaxon().parse(result)
+                    Log.v(TAG, result)
+                }
+                catch(err:Error) {
+                    print("Error when parsing JSON: "+err.localizedMessage)
+                }
+            }
+            else {
+                print("Error: Get request returned no response")
+            }
+        }
+        return categories
+    }
 }

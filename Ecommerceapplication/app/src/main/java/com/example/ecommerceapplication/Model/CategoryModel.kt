@@ -1,5 +1,5 @@
 package com.example.ecommerceapplication.Model
 
-data class CategoryModel (val title : String, val Description : String) {
+data class CategoryModel (val id : String, val title : String, val description : String, val imageLink : String) {
 
 }

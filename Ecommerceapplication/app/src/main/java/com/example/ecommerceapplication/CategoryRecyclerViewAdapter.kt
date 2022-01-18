@@ -8,8 +8,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.example.ecommerceapplication.Model.CategoryModel
 
-class CategoryRecyclerViewAdapter(private val categories : kotlin.Array<String>, private val images : kotlin.Array<Int>) : RecyclerView.Adapter<CategoryRecyclerViewAdapter.ViewHolder>() {
+class CategoryRecyclerViewAdapter(private val categories : MutableList<CategoryModel>) : RecyclerView.Adapter<CategoryRecyclerViewAdapter.ViewHolder>() {
     class ViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
         var itemText : TextView
         var itemImage : ImageView
@@ -38,8 +40,8 @@ class CategoryRecyclerViewAdapter(private val categories : kotlin.Array<String>,
     }
 
     override fun onBindViewHolder(holder: CategoryRecyclerViewAdapter.ViewHolder, position: Int) {
-        holder.itemText.text = categories[position]
-        holder.itemImage.setImageResource(images[position])
+        holder.itemText.text = categories[position].title
+        holder.itemImage.load(categories[position].imageLink)
     }
 
     override fun getItemCount(): Int {

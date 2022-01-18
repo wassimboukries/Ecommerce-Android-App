@@ -7,10 +7,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.beust.klaxon.Klaxon
 import com.example.ecommerceapplication.Model.CategoryModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,15 +22,7 @@ import org.json.JSONObject
 
 
 class CategoryFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = CategoryFragment()
-    }
-
-    private val TAG = "Category"
-    private lateinit var viewModel: CategoryViewModel
-    private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapterCategory: RecyclerView.Adapter<CategoryRecyclerViewAdapter.ViewHolder>? = null
+    private val viewModel: CategoryViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,51 +30,24 @@ class CategoryFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.category_fragment, container, false)
-        layoutManager = LinearLayoutManager(context)
-
-        val recyclerView : RecyclerView = view.findViewById(R.id.CategoryRecyclerView)
-        recyclerView.layoutManager = layoutManager
-
-        fetch("")
-
-        var categories = arrayOf("Informatique", "Beauté", "Hi-tech", "Bullshit", "Clothes", "Informatique", "Beauté", "Hi-tech", "Bullshit", "Clothes", "Beauté", "Hi-tech", "Bullshit", "Clothes" )
-        var categoriesImages = arrayOf(R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24,
-            R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24,
-            R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24)
-
-        adapterCategory = CategoryRecyclerViewAdapter(categories, categoriesImages)
-        recyclerView.adapter = adapterCategory
 
         return view
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CategoryViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val layoutManager = LinearLayoutManager(context)
+
+        val recyclerView : RecyclerView = view.findViewById(R.id.CategoryRecyclerView)
+        recyclerView.layoutManager = layoutManager
+
+        viewModel.liveData.observe(viewLifecycleOwner) { categories ->
+            val adapterCategory = CategoryRecyclerViewAdapter(categories)
+            recyclerView.adapter = adapterCategory
+        }
+        viewModel.fetch()
     }
 
-    private fun fetch(sUrl: String): Array? {
-        var categories: Array? = null
-        lifecycleScope.launch(Dispatchers.IO) {
-            val myService = Service()
-            val result = myService.getCategoriesList()
-            if (result != null) {
-                try {
-                    // Parse result string JSON to data class
-                    //categories = Klaxon().parse(result)
-                    val json = JSONObject(result)
-                    val brandsList = json.getJSONArray("brands")
-                    Log.v(TAG, brandsList.toString())
-                }
-                catch(err:Error) {
-                    print("Error when parsing JSON: "+err.localizedMessage)
-                }
-            }
-            else {
-                print("Error: Get request returned no response")
-            }
-        }
-        return categories
-    }
+    // to deplace to VieModel class
+
 }

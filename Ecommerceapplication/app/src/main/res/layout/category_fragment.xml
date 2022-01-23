@@ -9,11 +9,8 @@
         android:id="@+id/CategoryRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="678dp"
-        tools:listitem="@layout/recycler_view_item" />
+        tools:listitem="@layout/recycler_view_item_2"
+        tools:spanCount="2"
+        tools:layoutManager="GridLayoutManager" />
 
-    <TextView
-        android:id="@+id/textView55"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
 </FrameLayout>

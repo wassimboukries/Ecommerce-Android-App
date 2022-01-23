@@ -12,10 +12,8 @@ class Service {
         val client = OkHttpClient()
 
         val request = Request.Builder()
-            .url("https://asos2.p.rapidapi.com/categories/list?country=FR&lang=fr-FR")
+            .url("https://api.bestbuy.com/v1/categories?format=json&apiKey=VzGy1xqDaYHeOoAnL6NQwf0O")
             .get()
-            .addHeader("x-rapidapi-host", "asos2.p.rapidapi.com")
-            .addHeader("x-rapidapi-key", "24c331a03bmsh3957030eff8b15ap1d8e18jsnb9f963404616")
             .build()
 
 
@@ -37,5 +35,20 @@ class Service {
         })*/
 
         return myResponse;
+    }
+
+    fun getCategory(categoryName: String) : String {
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url("https://api.bestbuy.com/v1/categories(name=$categoryName)?format=json&apiKey=VzGy1xqDaYHeOoAnL6NQwf0O")
+            .get()
+            .build()
+
+
+        val response = client.newCall(request).execute()
+        myResponse = response.body()!!.string().toString()
+
+        return myResponse
     }
 }

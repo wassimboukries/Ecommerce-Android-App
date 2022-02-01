@@ -9,6 +9,7 @@ import android.widget.Toast
 
 import androidx.recyclerview.widget.RecyclerView;
 import coil.load
+import com.bumptech.glide.Glide
 import com.example.ecommerceapplication.Model.ProductModel
 
 class ProductRecyclerViewAdapter(private val products : MutableList<ProductModel>): RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder>() {
@@ -45,10 +46,11 @@ class ProductRecyclerViewAdapter(private val products : MutableList<ProductModel
 
     override fun onBindViewHolder(holder: ProductRecyclerViewAdapter.ViewHolder, position: Int) {
         holder.itemTitle.text = products[position].name
-        holder.itemPrice.text = products[position].price
+        holder.itemPrice.text = products[position].price + "€"
         holder.itemRating.text = products[position].rating
         val imageLink = products[position].imageLink
-        holder.itemImage.load(imageLink)
+        //holder.itemImage.load(imageLink)
+        Glide.with(holder.itemView.context).load(imageLink).into(holder.itemImage);
     }
 
     override fun getItemCount(): Int {

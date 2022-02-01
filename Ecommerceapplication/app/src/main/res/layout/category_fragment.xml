@@ -8,9 +8,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/CategoryRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="678dp"
+        android:layout_height="match_parent"
+        tools:layoutManager="GridLayoutManager"
         tools:listitem="@layout/recycler_view_item_2"
-        tools:spanCount="2"
-        tools:layoutManager="GridLayoutManager" />
+        tools:spanCount="2" />
 
 </FrameLayout>

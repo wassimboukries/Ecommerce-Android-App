@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ProductsListFragment">
 
     <TextView
@@ -14,7 +15,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ProductsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/recycler_view_item_1" />
+        android:layout_height="match_parent"
+        tools:layoutManager="GridLayoutManager"
+        tools:listitem="@layout/recycler_view_item_3"
+        tools:spanCount="2" />
 
-</FrameLayout>
+</LinearLayout>

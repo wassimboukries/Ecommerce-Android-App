@@ -20,10 +20,10 @@ class ProductRecyclerViewAdapter(private val products : MutableList<ProductModel
         var itemImage :ImageView
 
         init {
-            itemTitle = itemView.findViewById(R.id.ProductTitle)
-            itemPrice = itemView.findViewById(R.id.ProductPrice)
-            itemRating = itemView.findViewById(R.id.ProductRating)
-            itemImage = itemView.findViewById(R.id.ProductImage)
+            itemTitle = itemView.findViewById(R.id.ProductTitle1)
+            itemPrice = itemView.findViewById(R.id.ProductPrice1)
+            itemRating = itemView.findViewById(R.id.ProductRating1)
+            itemImage = itemView.findViewById(R.id.imageProduct1)
 
             itemView.setOnClickListener {
                 val toast = Toast.makeText(itemView.context, itemTitle.text, Toast.LENGTH_LONG)
@@ -40,7 +40,7 @@ class ProductRecyclerViewAdapter(private val products : MutableList<ProductModel
         parent: ViewGroup,
         viewType: Int
     ): ProductRecyclerViewAdapter.ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_1, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_3, parent, false)
         return ViewHolder(v)
     }
 

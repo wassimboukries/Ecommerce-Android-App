@@ -1,0 +1,49 @@
+[{
+  "id" : "sabcat0101000",
+  "title" : "TVs & Projector",
+  "image" : "tv"
+}, {
+  "id" : "abcat0502000",
+  "title" : "Laptops & Computers",
+  "image" : "laptops"
+},{
+  "id" : "pcmcat128500050005",
+  "title" : "Apple",
+  "image" : "apple"
+},{
+  "id" : "abcat0700000",
+  "title" : "Video Games",
+  "image" : "video_games"
+},{
+  "id" : "sabcat0101000",
+  "title" : "Cell Phones",
+  "image" : "phones"
+},{
+  "id" : "abcat0800000",
+  "title" : "Major Appliances",
+  "image" : "mappls"
+},{
+  "id" : "pcmcat209000050006",
+  "title" : "Tablets",
+  "image" : "tablets"
+},{
+  "id" : "abcat0204000",
+  "title" : "Headphones",
+  "image" : "headphones"
+},{
+  "id" : "abcat0712000",
+  "title" : "PC Gaming",
+  "image" : "pcgaming"
+},{
+  "id" : "abcat0400000",
+  "title" : "Cameras, Camcorders & Drones",
+  "image" : "cameras"
+},{
+  "id" : "pcmcat1619466198273",
+  "title" : "Home Health Care",
+  "image" : "health"
+},{
+  "id" : "pcmcat1477936947672",
+  "title" : "Top Toys",
+  "image" : "toys"
+}]

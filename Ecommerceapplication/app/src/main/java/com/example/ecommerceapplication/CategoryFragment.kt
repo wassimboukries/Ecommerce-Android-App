@@ -8,25 +8,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ecommerceapplication.Model.CategoryModel
+import org.json.JSONArray
+import java.io.BufferedReader
+import okio.use as use1
 
 
 class CategoryFragment : Fragment() {
     private val viewModel: CategoryViewModel by viewModels()
-    val categoriesNames = arrayOf("TVs & Projectors", "Laptops & Computers", "Apple", "Video Games, Consoles & VR",
-        "Cell Phones",
-        "Major Appliances" ,
-        "Tablets & E-Readers" ,
-        "Sound Bars, Speakers & Streaming Devices" ,
-        "Headphones" ,
-        "PC Gaming" ,
-        "Small Appliances, Floor Care & Home Air Quality" ,
-        "Wearable Technology" ,
-        "Smart Home & Networking" ,
-        "Cameras, Camcorders & Drones" ,
-        "Toys, Games & Collectibles" ,
-        "Printers, Ink & Home Office" ,
-        "Health, Fitness & Personal Care" ,
-        "Electric Transportation")
+    private val TAG = "Category"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,10 +39,22 @@ class CategoryFragment : Fragment() {
             val adapterCategory = CategoryRecyclerViewAdapter(categories)
             recyclerView.adapter = adapterCategory
         }*/
+        val categories = getCategories()
 
-        val adapterCategory = CategoryRecyclerViewAdapter(categoriesNames, viewModel.categoriesImagesLinks)
+        val adapterCategory = CategoryRecyclerViewAdapter(categories)
         recyclerView.adapter = adapterCategory
-        viewModel.fetch()
+    }
+
+    fun getCategories(): MutableList<CategoryModel> {
+        val rawData = JSONArray(context?.assets?.open("categories.json")!!.bufferedReader().use1(BufferedReader::readText))
+        val categories : MutableList<CategoryModel> = mutableListOf()
+        for (i in 0 until rawData.length()) {
+            val jsonCategory = rawData.getJSONObject(i)
+            val imageInt = requireContext().resources.getIdentifier(jsonCategory.get("image").toString(), "drawable", requireContext().packageName)
+            categories.add(CategoryModel(jsonCategory.get("id").toString(), jsonCategory.get("title").toString(), imageInt))
+        }
+
+        return categories
     }
 
     // to deplace to VieModel class

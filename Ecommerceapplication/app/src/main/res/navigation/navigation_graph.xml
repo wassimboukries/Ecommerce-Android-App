@@ -22,7 +22,10 @@
         android:label="product_fragment"
         tools:layout="@layout/products_list_fragment" >
         <argument
-            android:name="productName"
+            android:name="CategoryId"
+            app:argType="string" />
+        <argument
+            android:name="CategoryName"
             app:argType="string" />
     </fragment>
 </navigation>

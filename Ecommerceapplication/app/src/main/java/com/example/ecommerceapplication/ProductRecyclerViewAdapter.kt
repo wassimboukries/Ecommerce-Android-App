@@ -8,17 +8,19 @@ import android.widget.TextView
 import android.widget.Toast
 
 import androidx.recyclerview.widget.RecyclerView;
+import coil.load
+import com.example.ecommerceapplication.Model.ProductModel
 
-class ProductRecyclerViewAdapter(private val products : kotlin.Array<String>, private val images : kotlin.Array<Int>): RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder>() {
+class ProductRecyclerViewAdapter(private val products : MutableList<ProductModel>): RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder>() {
     class ViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var itemTitle : TextView
-        var itemDescription : TextView
+        var itemPrice : TextView
         var itemRating : TextView
         var itemImage :ImageView
 
         init {
             itemTitle = itemView.findViewById(R.id.ProductTitle)
-            itemDescription = itemView.findViewById(R.id.ProductDescription)
+            itemPrice = itemView.findViewById(R.id.ProductPrice)
             itemRating = itemView.findViewById(R.id.ProductRating)
             itemImage = itemView.findViewById(R.id.ProductImage)
 
@@ -42,10 +44,11 @@ class ProductRecyclerViewAdapter(private val products : kotlin.Array<String>, pr
     }
 
     override fun onBindViewHolder(holder: ProductRecyclerViewAdapter.ViewHolder, position: Int) {
-        holder.itemTitle.text = products[position]
-        holder.itemDescription.text = "The Same"
-        holder.itemRating.text = "4/5"
-        holder.itemImage.setImageResource(images[position])
+        holder.itemTitle.text = products[position].name
+        holder.itemPrice.text = products[position].price
+        holder.itemRating.text = products[position].rating
+        val imageLink = products[position].imageLink
+        holder.itemImage.load(imageLink)
     }
 
     override fun getItemCount(): Int {

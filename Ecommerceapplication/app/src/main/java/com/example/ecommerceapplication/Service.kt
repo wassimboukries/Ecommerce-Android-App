@@ -51,4 +51,19 @@ class Service {
 
         return myResponse
     }
+
+    fun getProductsList(categoryId : String): String {
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url("https://api.bestbuy.com/v1/products/mostViewed(categoryId=$categoryId)?apiKey=VzGy1xqDaYHeOoAnL6NQwf0O")
+            .get()
+            .build()
+
+
+        val response = client.newCall(request).execute()
+        myResponse = response.body()!!.string().toString()
+
+        return myResponse
+    }
 }

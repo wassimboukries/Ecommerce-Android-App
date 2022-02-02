@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/imageProduct1"
         android:layout_width="160dp"
-        android:layout_height="83dp"
+        android:layout_height="150dp"
         android:layout_gravity="center"
         android:layout_margin="5dp"
         android:gravity="center_horizontal"
@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="@tools:sample/lorem[3]" />
 
     <TextView

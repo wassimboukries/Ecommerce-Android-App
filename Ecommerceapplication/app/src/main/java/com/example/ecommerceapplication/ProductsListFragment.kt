@@ -2,10 +2,12 @@ package com.example.ecommerceapplication
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -18,7 +20,7 @@ class ProductsListFragment : Fragment() {
     companion object {
         fun newInstance() = ProductsListFragment()
     }
-
+    private val TAG = "Products"
     private val viewModel: ProductsListViewModel by viewModels()
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapterProductsList: RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder>? = null
@@ -51,6 +53,11 @@ class ProductsListFragment : Fragment() {
         var categoriesImages = arrayOf(R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24,
             R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24,
             R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24)
+
+        var nextButton = view.findViewById<Button>(R.id.NextButton)
+        nextButton.setOnClickListener{
+            Log.v(TAG, "NEEEEEEXTTTTTT paaaage")
+        }
 
         return view
     }

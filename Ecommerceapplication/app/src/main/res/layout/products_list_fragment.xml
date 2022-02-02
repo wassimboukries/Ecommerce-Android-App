@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ProductsListFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/PaginationBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,13 +22,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ProductsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="600dp"
-        android:layout_above="@id/PaginationBar"
         tools:layoutManager="GridLayoutManager"
         tools:listitem="@layout/recycler_view_item_3"
         tools:spanCount="2" />

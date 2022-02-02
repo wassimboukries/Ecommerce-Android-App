@@ -20,10 +20,10 @@ class ProductsListFragment : Fragment() {
     companion object {
         fun newInstance() = ProductsListFragment()
     }
-    private val TAG = "Products"
+
     private val viewModel: ProductsListViewModel by viewModels()
     private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapterProductsList: RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder>? = null
+    private var adapterProductsList: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,9 +55,6 @@ class ProductsListFragment : Fragment() {
             R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24, R.drawable.ic_baseline_laptop_24)
 
         var nextButton = view.findViewById<Button>(R.id.NextButton)
-        nextButton.setOnClickListener{
-            Log.v(TAG, "NEEEEEEXTTTTTT paaaage")
-        }
 
         return view
     }

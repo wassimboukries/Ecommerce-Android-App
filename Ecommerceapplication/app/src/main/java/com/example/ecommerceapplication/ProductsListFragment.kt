@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -35,7 +36,7 @@ class ProductsListFragment : Fragment() {
         //val productName = view.findViewById<TextView>(R.id.productName)
         //productName.text = name
 
-        layoutManager = LinearLayoutManager(context)
+        val layoutManager = GridLayoutManager(context, 2)
         val recyclerView : RecyclerView = view.findViewById(R.id.ProductsRecyclerView)
         recyclerView.layoutManager = layoutManager
 

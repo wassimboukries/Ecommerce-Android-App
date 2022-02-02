@@ -32,8 +32,8 @@ class ProductsListFragment : Fragment() {
 
         val name = args.categoryName
         val id = args.categoryId
-        val productName = view.findViewById<TextView>(R.id.productName)
-        productName.text = name
+        //val productName = view.findViewById<TextView>(R.id.productName)
+        //productName.text = name
 
         layoutManager = LinearLayoutManager(context)
         val recyclerView : RecyclerView = view.findViewById(R.id.ProductsRecyclerView)

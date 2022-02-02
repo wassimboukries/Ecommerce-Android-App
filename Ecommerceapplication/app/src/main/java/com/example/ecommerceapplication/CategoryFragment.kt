@@ -45,7 +45,7 @@ class CategoryFragment : Fragment() {
         recyclerView.adapter = adapterCategory
     }
 
-    fun getCategories(): MutableList<CategoryModel> {
+    private fun getCategories(): MutableList<CategoryModel> {
         val rawData = JSONArray(context?.assets?.open("categories.json")!!.bufferedReader().use1(BufferedReader::readText))
         val categories : MutableList<CategoryModel> = mutableListOf()
         for (i in 0 until rawData.length()) {

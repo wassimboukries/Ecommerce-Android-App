@@ -27,7 +27,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ProductsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="match_parent"
         tools:layoutManager="GridLayoutManager"
         tools:listitem="@layout/recycler_view_item_3"
         tools:spanCount="2" />

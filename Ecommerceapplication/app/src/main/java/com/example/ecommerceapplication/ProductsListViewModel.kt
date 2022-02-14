@@ -15,10 +15,10 @@ class ProductsListViewModel : ViewModel() {
     val liveData = MutableLiveData<MutableList<ProductModel>>()
     private val TAG = "Category"
 
-    fun fetch(categoryId : String){
+    fun fetch(categoryId : String, pageNumber : Int){
         viewModelScope.launch(Dispatchers.IO) {
             val myService = Service()
-            val result = myService.getProductsList(categoryId)
+            val result = myService.getProductsList(categoryId, pageNumber)
             Log.v(TAG, result)
             if (result != null) {
                 try {

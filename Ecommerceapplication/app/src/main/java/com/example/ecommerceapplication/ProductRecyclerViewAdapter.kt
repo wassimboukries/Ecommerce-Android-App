@@ -8,12 +8,18 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ecommerceapplication.Model.ProductModel
 
 
-class ProductRecyclerViewAdapter(private val products : MutableList<ProductModel>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ProductRecyclerViewAdapter(
+    private val products: MutableList<ProductModel>,
+    private val viewModel: ProductsListViewModel,
+    private val pageNumber : Int,
+    private val categoryId : String
+): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class ProductsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var itemTitle : TextView = itemView.findViewById(R.id.ProductTitle1)
         var itemPrice : TextView
@@ -62,7 +68,7 @@ class ProductRecyclerViewAdapter(private val products : MutableList<ProductModel
         if (position == products.size) {
             val nextButtonViewHolder = holder as NextButtonViewHolder
             nextButtonViewHolder.nextButton!!.setOnClickListener{
-                Log.v(TAG, "NEEEEEEXTTTTTT paaaage")
+                viewModel.fetch(categoryId, pageNumber)
             }
 
         } else {

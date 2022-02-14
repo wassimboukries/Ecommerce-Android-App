@@ -56,7 +56,7 @@ class Service {
         val client = OkHttpClient()
 
         val request = Request.Builder()
-            .url("https://api.bestbuy.com/v1/products/mostViewed(categoryId=$categoryId)?apiKey=VzGy1xqDaYHeOoAnL6NQwf0O")
+            .url("https://api.bestbuy.com/v1/products(categoryPath.id=$categoryId)?format=json&apiKey=VzGy1xqDaYHeOoAnL6NQwf0O")
             .get()
             .build()
 

@@ -25,16 +25,21 @@ class ProductsListViewModel : ViewModel() {
                     // Parse result string JSON to data class
                     //categories = Klaxon().parse(result)
                     val json = JSONObject(result)
-                    val results = json.getJSONArray("results")
+                    val results = json.getJSONArray("products")
                     val products = mutableListOf<ProductModel>()
                     for (i in 0 until 10) {
                         val productObject: JSONObject = results.getJSONObject(i)
-                        val name = productObject.getJSONObject("names").getString("title")
+                        val name = productObject.getString("name")
+                        val id = productObject.getInt("sku")
+                        val imageLink = productObject.getJSONArray("images").getJSONObject(1).getString("href")
+                        val price = productObject.getString("salePrice")
+                        val rating = productObject.getString("customerReviewAverage")
+                        /*val name = productObject.getJSONObject("names").getString("title")
                         val id = productObject.getString("sku")
                         val imageLink = productObject.getJSONObject("images").getString("standard")
                         val price = productObject.getJSONObject("prices").getString("current")
-                        val rating = productObject.getJSONObject("customerReviews").getString("averageScore")
-                        val product = ProductModel(id, name, imageLink, price, rating)
+                        val rating = productObject.getJSONObject("customerReviews").getString("averageScore")*/
+                        val product = ProductModel(id.toString(), name, imageLink, price, rating)
                         products.add(product)
                     }
                     //childrenList.get (0..10)

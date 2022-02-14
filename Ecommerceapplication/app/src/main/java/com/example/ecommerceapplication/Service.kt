@@ -56,7 +56,7 @@ class Service {
         val client = OkHttpClient()
 
         var paginationString = ""
-        if (pageNumber != 0) {
+        if (pageNumber != 1) {
             paginationString = "&page=$pageNumber"
         }
 

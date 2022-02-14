@@ -38,7 +38,12 @@ class ProductsListFragment : Fragment() {
         val recyclerView : RecyclerView = view.findViewById(R.id.ProductsRecyclerView)
         recyclerView.layoutManager = layoutManager
 
-        viewModel.fetch(id, 0)
+        viewModel.fetch(id, 1)
+
+        var totalPages : Int;
+        viewModel.liveTotalPages.observe(viewLifecycleOwner) { maxPages ->
+            totalPages = maxPages
+        }
 
         viewModel.liveData.observe(viewLifecycleOwner) { products ->
             adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, ++pageNumber, id)

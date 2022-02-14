@@ -67,7 +67,7 @@ class ProductRecyclerViewAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (position == products.size) {
             val nextButtonViewHolder = holder as NextButtonViewHolder
-            nextButtonViewHolder.nextButton!!.setOnClickListener{
+            nextButtonViewHolder.nextButton!!.setOnClickListener {
                 viewModel.fetch(categoryId, pageNumber)
             }
 

@@ -14,11 +14,13 @@ class ProductsListViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     val liveData = MutableLiveData<MutableList<ProductModel>>()
     val liveTotalPages = MutableLiveData<Int>()
+    private var pageNumber : Int = 0
     private val TAG = "Category"
 
-    fun fetch(categoryId : String, pageNumber : Int){
+    fun fetch(categoryId : String, isNextPage : Boolean){
         viewModelScope.launch(Dispatchers.IO) {
             val myService = Service()
+            if (isNextPage) ++pageNumber else --pageNumber
             val result = myService.getProductsList(categoryId, pageNumber)
             Log.v(TAG, result)
             if (result != null) {

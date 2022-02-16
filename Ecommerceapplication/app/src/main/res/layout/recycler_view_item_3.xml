@@ -21,6 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#131313"
         tools:text="@tools:sample/lorem[3]" />
 
     <TextView

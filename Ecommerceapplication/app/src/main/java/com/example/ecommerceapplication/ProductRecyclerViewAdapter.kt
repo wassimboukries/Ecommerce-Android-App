@@ -17,7 +17,6 @@ import com.example.ecommerceapplication.Model.ProductModel
 class ProductRecyclerViewAdapter(
     private val products: MutableList<ProductModel>,
     private val viewModel: ProductsListViewModel,
-    private val pageNumber : Int,
     private val categoryId : String
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class ProductsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
@@ -40,10 +39,12 @@ class ProductRecyclerViewAdapter(
             }
         }
     }
-    inner class NextButtonViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
+    inner class PaginationButtonsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var nextButton : Button
+        var previousButton : Button
         init {
             nextButton = itemView.findViewById(R.id.NextButton)
+            previousButton = itemView.findViewById(R.id.PreviousButton)
         }
 
     }
@@ -55,7 +56,7 @@ class ProductRecyclerViewAdapter(
     ): RecyclerView.ViewHolder {
         return if(viewType == R.layout.button_next){
             var itemView = LayoutInflater.from(parent.context).inflate(R.layout.button_next, parent, false);
-            NextButtonViewHolder(itemView)
+            PaginationButtonsViewHolder(itemView)
         } else {
             var itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_3, parent, false);
             ProductsViewHolder(itemView)
@@ -66,9 +67,12 @@ class ProductRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (position == products.size) {
-            val nextButtonViewHolder = holder as NextButtonViewHolder
+            val nextButtonViewHolder = holder as PaginationButtonsViewHolder
             nextButtonViewHolder.nextButton!!.setOnClickListener {
-                viewModel.fetch(categoryId, pageNumber)
+                viewModel.fetch(categoryId, true)
+            }
+            nextButtonViewHolder.previousButton!!.setOnClickListener {
+                viewModel.fetch(categoryId, false)
             }
 
         } else {

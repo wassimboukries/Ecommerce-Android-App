@@ -19,7 +19,6 @@ class ProductsListFragment : Fragment() {
     private val viewModel: ProductsListViewModel by viewModels()
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapterProductsList: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
-    private var pageNumber : Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +37,7 @@ class ProductsListFragment : Fragment() {
         val recyclerView : RecyclerView = view.findViewById(R.id.ProductsRecyclerView)
         recyclerView.layoutManager = layoutManager
 
-        viewModel.fetch(id, 1)
+        viewModel.fetch(id, true)
 
         var totalPages : Int;
         viewModel.liveTotalPages.observe(viewLifecycleOwner) { maxPages ->
@@ -46,7 +45,7 @@ class ProductsListFragment : Fragment() {
         }
 
         viewModel.liveData.observe(viewLifecycleOwner) { products ->
-            adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, ++pageNumber, id)
+            adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, id)
             recyclerView.adapter = adapterProductsList
         }
 

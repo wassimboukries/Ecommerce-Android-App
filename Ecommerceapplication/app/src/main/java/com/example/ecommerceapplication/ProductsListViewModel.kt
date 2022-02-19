@@ -13,7 +13,7 @@ import org.json.JSONObject
 class ProductsListViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     val liveData = MutableLiveData<MutableList<ProductModel>>()
-    val liveTotalPages = MutableLiveData<Int>()
+    val liveCurrentPage = MutableLiveData<Int>()
     private var pageNumber : Int = 0
     private val TAG = "Category"
 
@@ -28,7 +28,8 @@ class ProductsListViewModel : ViewModel() {
                     // Parse result string JSON to data class
                     //categories = Klaxon().parse(result)
                     val json = JSONObject(result)
-                    val totalPages = json.getInt("totalPages")
+                    val currentPage = json.getInt("currentPage")
+                    liveCurrentPage.postValue(currentPage)
                     val results = json.getJSONArray("products")
                     val products = mutableListOf<ProductModel>()
                     for (i in 0 until 10) {
@@ -49,7 +50,7 @@ class ProductsListViewModel : ViewModel() {
                     //childrenList.get (0..10)
                     Log.v(TAG, products.toString())
                     liveData.postValue(products)
-                    liveTotalPages.postValue(totalPages)
+
                 }
                 catch(err:Error) {
                     print("Error when parsing JSON: "+err.localizedMessage)

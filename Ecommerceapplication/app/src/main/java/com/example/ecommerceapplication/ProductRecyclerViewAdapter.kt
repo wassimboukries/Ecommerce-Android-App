@@ -3,11 +3,14 @@ package com.example.ecommerceapplication
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -17,7 +20,8 @@ import com.example.ecommerceapplication.Model.ProductModel
 class ProductRecyclerViewAdapter(
     private val products: MutableList<ProductModel>,
     private val viewModel: ProductsListViewModel,
-    private val categoryId : String
+    private val categoryId : String,
+    private val currentPage : Int
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class ProductsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var itemTitle : TextView = itemView.findViewById(R.id.ProductTitle1)
@@ -67,13 +71,19 @@ class ProductRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (position == products.size) {
-            val nextButtonViewHolder = holder as PaginationButtonsViewHolder
-            nextButtonViewHolder.nextButton!!.setOnClickListener {
+            val paginationButtonsViewHolder = holder as PaginationButtonsViewHolder
+            paginationButtonsViewHolder.nextButton!!.setOnClickListener {
                 viewModel.fetch(categoryId, true)
             }
-            nextButtonViewHolder.previousButton!!.setOnClickListener {
-                viewModel.fetch(categoryId, false)
+            if (currentPage == 1) {
+                paginationButtonsViewHolder.previousButton.visibility = INVISIBLE
+            } else {
+                paginationButtonsViewHolder.previousButton.visibility = VISIBLE
+                paginationButtonsViewHolder.previousButton!!.setOnClickListener {
+                    viewModel.fetch(categoryId, false)
+                }
             }
+
 
         } else {
             val productsViewHolder = holder as ProductsViewHolder

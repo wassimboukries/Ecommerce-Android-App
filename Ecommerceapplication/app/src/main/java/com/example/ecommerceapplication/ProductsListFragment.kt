@@ -39,13 +39,13 @@ class ProductsListFragment : Fragment() {
 
         viewModel.fetch(id, true)
 
-        var totalPages : Int;
-        viewModel.liveTotalPages.observe(viewLifecycleOwner) { maxPages ->
-            totalPages = maxPages
+        var currentPage : Int = 1;
+        viewModel.liveCurrentPage.observe(viewLifecycleOwner) { page ->
+            currentPage = page
         }
 
         viewModel.liveData.observe(viewLifecycleOwner) { products ->
-            adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, id)
+            adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, id, currentPage)
             recyclerView.adapter = adapterProductsList
         }
 

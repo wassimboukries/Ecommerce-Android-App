@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="200dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:layout_margin="5dp"
+    android:background="@android:drawable/editbox_background">
 
-    <ImageView
-        android:id="@+id/imageProduct1"
-        android:layout_width="160dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:gravity="center_horizontal"
-        tools:src="@tools:sample/avatars" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/grey"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/imageProduct1"
+            android:layout_width="160dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            tools:src="@tools:sample/avatars"/>
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/ProductTitle1"
@@ -21,8 +30,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#131313"
         tools:text="@tools:sample/lorem[3]" />
 
     <TextView

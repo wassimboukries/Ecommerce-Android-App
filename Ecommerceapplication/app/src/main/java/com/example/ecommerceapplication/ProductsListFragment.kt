@@ -29,6 +29,7 @@ class ProductsListFragment : Fragment() {
         val args: ProductsListFragmentArgs by navArgs()
 
         val name = args.categoryName
+        activity?.title = name;
         val id = args.categoryId
         //val productName = view.findViewById<TextView>(R.id.productName)
         //productName.text = name

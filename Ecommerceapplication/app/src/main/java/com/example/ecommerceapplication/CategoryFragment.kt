@@ -24,7 +24,7 @@ class CategoryFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.category_fragment, container, false)
-
+        activity?.title = "Categories";
         return view
     }
 

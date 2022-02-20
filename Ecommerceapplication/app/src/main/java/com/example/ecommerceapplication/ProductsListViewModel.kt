@@ -36,6 +36,7 @@ class ProductsListViewModel : ViewModel() {
                         val productObject: JSONObject = results.getJSONObject(i)
                         val name = productObject.getString("name")
                         val id = productObject.getInt("sku")
+                        val url = productObject.getString("url")
                         val imageLink = productObject.getJSONArray("images").getJSONObject(0).getString("href")
                         val price = productObject.getString("salePrice")
                         val rating = productObject.getString("customerReviewAverage")
@@ -44,7 +45,7 @@ class ProductsListViewModel : ViewModel() {
                         val imageLink = productObject.getJSONObject("images").getString("standard")
                         val price = productObject.getJSONObject("prices").getString("current")
                         val rating = productObject.getJSONObject("customerReviews").getString("averageScore")*/
-                        val product = ProductModel(id.toString(), name, imageLink, price, rating)
+                        val product = ProductModel(id.toString(), name, imageLink, price, rating, url)
                         products.add(product)
                     }
                     //childrenList.get (0..10)

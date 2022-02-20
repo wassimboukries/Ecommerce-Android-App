@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ecommerceapplication.Model.ProductModel
@@ -25,21 +26,19 @@ class ProductRecyclerViewAdapter(
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class ProductsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var itemTitle : TextView = itemView.findViewById(R.id.ProductTitle1)
-        var itemPrice : TextView
-        var itemRating : TextView
-        var itemImage :ImageView
+        var itemPrice : TextView = itemView.findViewById(R.id.ProductPrice1)
+        var itemRating : TextView = itemView.findViewById(R.id.ProductRating1)
+        var itemImage : ImageView = itemView.findViewById(R.id.imageProduct1)
+        lateinit var itemUrl : String
 
         init {
-            itemPrice = itemView.findViewById(R.id.ProductPrice1)
-            itemRating = itemView.findViewById(R.id.ProductRating1)
-            itemImage = itemView.findViewById(R.id.imageProduct1)
 
             itemView.setOnClickListener {
                 val toast = Toast.makeText(itemView.context, itemTitle.text, Toast.LENGTH_LONG)
                 toast.show()
 
-                /*val action = CategoryFragmentDirections.actionCategoryFragmentToProductFragment(itemText.text.toString())
-                itemView?.findNavController()?.navigate(action)*/
+                val action = ProductsListFragmentDirections.actionProductFragmentToProductDetailsFragment(itemUrl)
+                itemView?.findNavController()?.navigate(action)
             }
         }
     }
@@ -90,6 +89,7 @@ class ProductRecyclerViewAdapter(
             productsViewHolder.itemTitle.text = products[position].name
             productsViewHolder.itemPrice.text = products[position].price + "€"
             productsViewHolder.itemRating.text = products[position].rating
+            productsViewHolder.itemUrl = products[position].url
             val imageLink = products[position].imageLink
             //holder.itemImage.load(imageLink)
             Glide.with(productsViewHolder.itemView.context).load(imageLink).into(productsViewHolder.itemImage);

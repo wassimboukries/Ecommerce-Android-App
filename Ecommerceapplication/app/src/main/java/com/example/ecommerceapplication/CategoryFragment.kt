@@ -1,10 +1,11 @@
 package com.example.ecommerceapplication
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +15,7 @@ import java.io.BufferedReader
 import okio.use as use1
 
 
-class CategoryFragment : Fragment() {
+class CategoryFragment : Fragment() , FragmentManager.OnBackStackChangedListener{
     private val viewModel: CategoryViewModel by viewModels()
     private val TAG = "Category"
 
@@ -25,6 +26,7 @@ class CategoryFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.category_fragment, container, false)
         activity?.title = "Categories";
+        activity?.supportFragmentManager?.addOnBackStackChangedListener(this);
         return view
     }
 
@@ -55,6 +57,15 @@ class CategoryFragment : Fragment() {
         }
 
         return categories
+    }
+
+    override fun onBackStackChanged() {
+        if (activity != null) {
+            // enable Up button only if there are entries on the backstack
+            if (requireActivity().supportFragmentManager.backStackEntryCount < 1) {
+                (activity as MainActivity?)!!.hideUpButton()
+            }
+        }
     }
 
     // to deplace to VieModel class

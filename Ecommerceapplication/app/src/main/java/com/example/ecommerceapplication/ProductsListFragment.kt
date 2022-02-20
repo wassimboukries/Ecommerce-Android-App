@@ -1,10 +1,10 @@
 package com.example.ecommerceapplication
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -30,6 +30,7 @@ class ProductsListFragment : Fragment() {
 
         val name = args.categoryName
         activity?.title = name;
+        (activity as MainActivity?)!!.showUpButton()
         val id = args.categoryId
         //val productName = view.findViewById<TextView>(R.id.productName)
         //productName.text = name

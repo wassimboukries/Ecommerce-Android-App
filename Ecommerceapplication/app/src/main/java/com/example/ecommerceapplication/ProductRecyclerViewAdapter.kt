@@ -40,13 +40,8 @@ class ProductRecyclerViewAdapter(
         }
     }
     inner class PaginationButtonsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
-        var nextButton : Button
-        var previousButton : Button
-        init {
-            nextButton = itemView.findViewById(R.id.NextButton)
-            previousButton = itemView.findViewById(R.id.PreviousButton)
-        }
-
+        var nextButton : Button = itemView.findViewById(R.id.NextButton)
+        var previousButton : Button = itemView.findViewById(R.id.PreviousButton)
     }
 
     private val TAG = "Products"

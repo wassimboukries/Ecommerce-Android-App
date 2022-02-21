@@ -39,13 +39,20 @@ class ProductsListViewModel : ViewModel() {
                         val url = productObject.getString("url")
                         val imageLink = productObject.getJSONArray("images").getJSONObject(0).getString("href")
                         val price = productObject.getString("salePrice")
-                        val rating = productObject.getString("customerReviewAverage")
+                        var rating = productObject.getString("customerReviewAverage")
+                        var reviewCount = productObject.getString("customerReviewCount")
                         /*val name = productObject.getJSONObject("names").getString("title")
                         val id = productObject.getString("sku")
                         val imageLink = productObject.getJSONObject("images").getString("standard")
                         val price = productObject.getJSONObject("prices").getString("current")
                         val rating = productObject.getJSONObject("customerReviews").getString("averageScore")*/
-                        val product = ProductModel(id.toString(), name, imageLink, price, rating, url)
+                        if (rating == null) {
+                            rating = "5.";
+                        }
+                        if (reviewCount == null) {
+                            reviewCount = "0";
+                        }
+                        val product = ProductModel(id.toString(), name, imageLink, price, rating, reviewCount, url)
                         products.add(product)
                     }
                     //childrenList.get (0..10)

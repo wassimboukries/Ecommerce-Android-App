@@ -41,14 +41,30 @@
         android:gravity="center_horizontal"
         tools:text="@tools:sample/lorem[4]" />
 
-    <RatingBar
-        android:id="@+id/ProductRating1"
-        style="@style/Widget.AppCompat.RatingBar.Small"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="bottom"
-        android:isIndicator="true"
-        android:numStars="5"
-        android:stepSize="0.1" />
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal|bottom">
+
+        <RatingBar
+            android:id="@+id/ProductRating1"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="bottom"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:stepSize="0.1" />
+
+        <TextView
+            android:id="@+id/ProductReviewCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
 </LinearLayout>

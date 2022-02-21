@@ -26,6 +26,8 @@ class ProductRecyclerViewAdapter(
         var itemPrice : TextView = itemView.findViewById(R.id.ProductPrice1)
         var itemRating : RatingBar = itemView.findViewById(R.id.ProductRating1)
         var itemImage : ImageView = itemView.findViewById(R.id.imageProduct1)
+        var itemReviewCount : TextView = itemView.findViewById(R.id.ProductReviewCount)
+
         lateinit var itemUrl : String
 
         init {
@@ -81,6 +83,7 @@ class ProductRecyclerViewAdapter(
             productsViewHolder.itemTitle.text = products[position].name
             productsViewHolder.itemPrice.text = products[position].price + "€"
             productsViewHolder.itemRating.rating = products[position].rating.toFloat()
+            productsViewHolder.itemReviewCount.text = products[position].reviewCount
             productsViewHolder.itemUrl = products[position].url
             val imageLink = products[position].imageLink
             //holder.itemImage.load(imageLink)

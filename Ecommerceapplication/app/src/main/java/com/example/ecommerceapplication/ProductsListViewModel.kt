@@ -46,10 +46,10 @@ class ProductsListViewModel : ViewModel() {
                         val imageLink = productObject.getJSONObject("images").getString("standard")
                         val price = productObject.getJSONObject("prices").getString("current")
                         val rating = productObject.getJSONObject("customerReviews").getString("averageScore")*/
-                        if (rating == null) {
+                        if (rating == "null") {
                             rating = "5.";
                         }
-                        if (reviewCount == null) {
+                        if (reviewCount == "null") {
                             reviewCount = "0";
                         }
                         val product = ProductModel(id.toString(), name, imageLink, price, rating, reviewCount, url)

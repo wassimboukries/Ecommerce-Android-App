@@ -1,14 +1,14 @@
 package com.example.ecommerceapplication
 
-import android.util.Log
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -35,8 +35,11 @@ class ProductRecyclerViewAdapter(
             itemView.setOnClickListener {
                 val toast = Toast.makeText(itemView.context, itemTitle.text, Toast.LENGTH_LONG)
                 toast.show()
-
-                val action = ProductsListFragmentDirections.actionProductFragmentToProductDetailsFragment(itemUrl)
+                /*val intent = Intent(Intent.ACTION_VIEW, Uri.parse(itemUrl))
+                startActivity(itemView.context, intent, null);*/
+                val action = ProductsListFragmentDirections.actionProductFragmentToProductDetailsFragment(itemUrl,
+                    itemTitle.text as String
+                )
                 itemView?.findNavController()?.navigate(action)
             }
         }

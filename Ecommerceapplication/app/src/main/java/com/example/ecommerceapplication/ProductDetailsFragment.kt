@@ -29,6 +29,8 @@ class ProductDetailsFragment : Fragment() {
         webView.webViewClient = WebViewClient()
         webView.loadUrl(args.url)
 
+        activity?.title = args.productName
+
         return view
     }
 

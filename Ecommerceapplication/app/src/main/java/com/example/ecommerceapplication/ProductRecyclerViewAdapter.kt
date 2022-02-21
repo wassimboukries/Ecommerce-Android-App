@@ -6,10 +6,7 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -27,7 +24,7 @@ class ProductRecyclerViewAdapter(
     inner class ProductsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var itemTitle : TextView = itemView.findViewById(R.id.ProductTitle1)
         var itemPrice : TextView = itemView.findViewById(R.id.ProductPrice1)
-        var itemRating : TextView = itemView.findViewById(R.id.ProductRating1)
+        var itemRating : RatingBar = itemView.findViewById(R.id.ProductRating1)
         var itemImage : ImageView = itemView.findViewById(R.id.imageProduct1)
         lateinit var itemUrl : String
 
@@ -88,7 +85,7 @@ class ProductRecyclerViewAdapter(
             val productsViewHolder = holder as ProductsViewHolder
             productsViewHolder.itemTitle.text = products[position].name
             productsViewHolder.itemPrice.text = products[position].price + "€"
-            productsViewHolder.itemRating.text = products[position].rating
+            productsViewHolder.itemRating.rating = products[position].rating.toFloat()
             productsViewHolder.itemUrl = products[position].url
             val imageLink = products[position].imageLink
             //holder.itemImage.load(imageLink)

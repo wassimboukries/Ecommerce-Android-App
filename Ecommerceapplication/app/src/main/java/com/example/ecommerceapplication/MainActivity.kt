@@ -22,28 +22,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.nav_menu, menu)
-
-        val searchItem = menu?.findItem(R.id.nav_search)
-        val searchView = searchItem?.actionView as SearchView
-
-        searchView.queryHint = "Search a product"
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(p0: String): Boolean {
-                Log.v(TAG, p0)
-                return true
-            }
-
-        })
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
     // this event will enable the back
     // function to the button on press
     override fun onContextItemSelected(item: MenuItem): Boolean {

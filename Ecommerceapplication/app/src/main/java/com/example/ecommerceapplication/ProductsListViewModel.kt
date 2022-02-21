@@ -17,7 +17,7 @@ class ProductsListViewModel : ViewModel() {
     private var pageNumber : Int = 0
     private val TAG = "Category"
 
-    fun fetch(categoryId : String, isNextPage : Boolean){
+    fun fetch(categoryId : String, isNextPage : Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             val myService = Service()
             if (isNextPage) ++pageNumber else --pageNumber

@@ -40,7 +40,7 @@ class ProductRecyclerViewAdapter(
                 val action = ProductsListFragmentDirections.actionProductFragmentToProductDetailsFragment(itemUrl,
                     itemTitle.text as String
                 )
-                itemView?.findNavController()?.navigate(action)
+                itemView.findNavController().navigate(action)
             }
         }
     }
@@ -55,10 +55,10 @@ class ProductRecyclerViewAdapter(
         viewType: Int
     ): RecyclerView.ViewHolder {
         return if(viewType == R.layout.button_next){
-            var itemView = LayoutInflater.from(parent.context).inflate(R.layout.button_next, parent, false);
+            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.button_next, parent, false);
             PaginationButtonsViewHolder(itemView)
         } else {
-            var itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_3, parent, false);
+            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_3, parent, false);
             ProductsViewHolder(itemView)
         }
 

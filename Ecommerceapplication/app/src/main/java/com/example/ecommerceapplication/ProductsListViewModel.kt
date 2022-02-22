@@ -17,11 +17,11 @@ class ProductsListViewModel : ViewModel() {
     private var pageNumber : Int = 0
     private val TAG = "Category"
 
-    fun fetch(categoryId : String, isNextPage : Boolean) {
+    fun fetch(categoryId : String, isNextPage : Boolean, searchString: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             val myService = Service()
             if (isNextPage) ++pageNumber else --pageNumber
-            val result = myService.getProductsList(categoryId, pageNumber)
+            val result = myService.getProductsList(categoryId, pageNumber, searchString)
             Log.v(TAG, result)
             if (result != null) {
                 try {

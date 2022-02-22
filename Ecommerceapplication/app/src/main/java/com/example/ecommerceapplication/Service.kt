@@ -52,7 +52,7 @@ class Service {
         return myResponse
     }
 
-    fun getProductsList(categoryId : String, pageNumber : Int): String {
+    fun getProductsList(categoryId : String, pageNumber : Int, searchString: String?): String {
         val client = OkHttpClient()
 
         var paginationString = ""
@@ -60,9 +60,13 @@ class Service {
             paginationString = "&page=$pageNumber"
         }
 
+        var search = ""
+        if (searchString != null) {
+            search = "&search=$searchString"
+        }
 
         val request = Request.Builder()
-            .url("https://api.bestbuy.com/v1/products(categoryPath.id=$categoryId)?format=json$paginationString&apiKey=VzGy1xqDaYHeOoAnL6NQwf0O")
+            .url("https://api.bestbuy.com/v1/products(categoryPath.id=$categoryId$search)?format=json$paginationString&apiKey=VzGy1xqDaYHeOoAnL6NQwf0O")
             .get()
             .build()
 

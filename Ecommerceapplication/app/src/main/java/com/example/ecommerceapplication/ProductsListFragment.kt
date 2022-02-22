@@ -6,6 +6,7 @@ import android.view.*
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,16 +21,12 @@ class ProductsListFragment : Fragment() {
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapterProductsList: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
     private val args: ProductsListFragmentArgs by navArgs()
-    private lateinit var _inflater : LayoutInflater
-    private var _container: ViewGroup? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        _inflater = inflater
-        _container = container
         val view = inflater.inflate(R.layout.products_list_fragment, container, false)
         //val name = ProductFragmentArgs.fromBundle(arguments).productName
 
@@ -45,7 +42,7 @@ class ProductsListFragment : Fragment() {
         val recyclerView : RecyclerView = view.findViewById(R.id.ProductsRecyclerView)
         recyclerView.layoutManager = layoutManager
 
-        viewModel.fetch(id, true)
+        viewModel.fetch(id, true, args.searchString)
 
         var currentPage : Int = 1;
         viewModel.liveCurrentPage.observe(viewLifecycleOwner) { page ->
@@ -72,7 +69,13 @@ class ProductsListFragment : Fragment() {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 //val viewModel = ProductsListViewModel()
                 //viewModel.fetch(args.categoryId, false)
-                onCreateView(_inflater, _container, null)
+               /* val transaction = activity?.supportFragmentManager?.beginTransaction()
+                transaction?.replace(R.id.fragmentContainerView, newInstance())
+                transaction?.disallowAddToBackStack()
+                transaction?.commit()
+                *///onCreateView(_inflater, _container, null)
+                val action = ProductsListFragmentDirections.actionProductFragmentSelf(args.categoryId, args.categoryName, p0)
+                findNavController().navigate(action)
                 return true
             }
 

@@ -26,7 +26,7 @@ class CategoryRecyclerViewAdapter(private val categories : MutableList<CategoryM
                 val toast = Toast.makeText(itemView.context, itemText.text, Toast.LENGTH_LONG)
                 toast.show()
 
-                val action = CategoryFragmentDirections.actionCategoryFragmentToProductFragment(itemId, itemText.text.toString())
+                val action = CategoryFragmentDirections.actionCategoryFragmentToProductFragment(itemId, itemText.text.toString(), null)
                 itemView?.findNavController()?.navigate(action)
             }
         }

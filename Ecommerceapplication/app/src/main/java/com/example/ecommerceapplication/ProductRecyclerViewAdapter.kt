@@ -69,14 +69,14 @@ class ProductRecyclerViewAdapter(
         if (position == products.size) {
             val paginationButtonsViewHolder = holder as PaginationButtonsViewHolder
             paginationButtonsViewHolder.nextButton!!.setOnClickListener {
-                viewModel.fetch(categoryId, true)
+                viewModel.fetch(categoryId, true, null)
             }
             if (currentPage == 1) {
                 paginationButtonsViewHolder.previousButton.visibility = INVISIBLE
             } else {
                 paginationButtonsViewHolder.previousButton.visibility = VISIBLE
                 paginationButtonsViewHolder.previousButton!!.setOnClickListener {
-                    viewModel.fetch(categoryId, false)
+                    viewModel.fetch(categoryId, false, null)
                 }
             }
 

@@ -30,6 +30,13 @@
         <action
             android:id="@+id/action_productFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment" />
+        <action
+            android:id="@+id/action_productFragment_self"
+            app:destination="@id/productFragment" />
+        <argument
+            android:name="searchString"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/productDetailsFragment"

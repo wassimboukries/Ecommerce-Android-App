@@ -3,7 +3,9 @@ package com.example.ecommerceapplication
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.View.*
 import android.widget.SearchView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -41,6 +43,7 @@ class ProductsListFragment : Fragment() {
         val layoutManager = GridLayoutManager(context, 2)
         val recyclerView : RecyclerView = view.findViewById(R.id.ProductsRecyclerView)
         recyclerView.layoutManager = layoutManager
+        val noProductText : TextView = view.findViewById(R.id.noProductsTextView)
 
         viewModel.fetch(id, true, args.searchString)
 
@@ -50,8 +53,14 @@ class ProductsListFragment : Fragment() {
         }
 
         viewModel.liveData.observe(viewLifecycleOwner) { products ->
-            adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, id, currentPage)
-            recyclerView.adapter = adapterProductsList
+
+            if (products.isEmpty()) {
+                recyclerView.visibility = GONE
+                noProductText.visibility = VISIBLE
+            } else {
+                adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, id, currentPage, args.searchString)
+                recyclerView.adapter = adapterProductsList
+            }
         }
 
 

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Ecommerce application</string>
+    <string name="no_products_found">Sorry! No products are found</string>
 </resources>

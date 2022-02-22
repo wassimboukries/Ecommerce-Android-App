@@ -19,7 +19,8 @@ class ProductRecyclerViewAdapter(
     private val products: MutableList<ProductModel>,
     private val viewModel: ProductsListViewModel,
     private val categoryId : String,
-    private val currentPage : Int
+    private val currentPage : Int,
+    private val searchRequest : String?
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class ProductsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var itemTitle : TextView = itemView.findViewById(R.id.ProductTitle1)
@@ -69,14 +70,14 @@ class ProductRecyclerViewAdapter(
         if (position == products.size) {
             val paginationButtonsViewHolder = holder as PaginationButtonsViewHolder
             paginationButtonsViewHolder.nextButton!!.setOnClickListener {
-                viewModel.fetch(categoryId, true, null)
+                viewModel.fetch(categoryId, true, searchRequest)
             }
             if (currentPage == 1) {
                 paginationButtonsViewHolder.previousButton.visibility = INVISIBLE
             } else {
                 paginationButtonsViewHolder.previousButton.visibility = VISIBLE
                 paginationButtonsViewHolder.previousButton!!.setOnClickListener {
-                    viewModel.fetch(categoryId, false, null)
+                    viewModel.fetch(categoryId, false, searchRequest)
                 }
             }
 

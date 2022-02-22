@@ -32,7 +32,7 @@ class ProductsListViewModel : ViewModel() {
                     liveCurrentPage.postValue(currentPage)
                     val results = json.getJSONArray("products")
                     val products = mutableListOf<ProductModel>()
-                    for (i in 0 until 10) {
+                    for (i in 0 until results.length()) {
                         val productObject: JSONObject = results.getJSONObject(i)
                         val name = productObject.getString("name")
                         val id = productObject.getInt("sku")

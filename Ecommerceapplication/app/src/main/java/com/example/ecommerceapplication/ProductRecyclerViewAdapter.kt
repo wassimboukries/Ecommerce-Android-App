@@ -1,14 +1,12 @@
 package com.example.ecommerceapplication
 
-import android.content.Intent
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat.startActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,7 +18,8 @@ class ProductRecyclerViewAdapter(
     private val viewModel: ProductsListViewModel,
     private val categoryId : String,
     private val currentPage : Int,
-    private val searchRequest : String?
+    private val searchRequest : String?,
+    private val screenWidth : Int
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class ProductsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var itemTitle : TextView = itemView.findViewById(R.id.ProductTitle1)
@@ -48,6 +47,24 @@ class ProductRecyclerViewAdapter(
     inner class PaginationButtonsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var nextButton : Button = itemView.findViewById(R.id.NextButton)
         var previousButton : Button = itemView.findViewById(R.id.PreviousButton)
+        var container : ConstraintLayout = itemView.findViewById(R.id.buttonsNextPreviousContainer)
+
+        init {
+            var params = container.layoutParams
+            params.width = screenWidth
+            container.layoutParams = params
+            nextButton.setOnClickListener {
+                viewModel.fetch(categoryId, true, searchRequest)
+            }
+            if (currentPage == 1) {
+                previousButton.visibility = INVISIBLE
+            } else {
+                previousButton.visibility = VISIBLE
+                previousButton.setOnClickListener {
+                    viewModel.fetch(categoryId, false, searchRequest)
+                }
+            }
+        }
     }
 
     private val TAG = "Products"
@@ -56,6 +73,7 @@ class ProductRecyclerViewAdapter(
         viewType: Int
     ): RecyclerView.ViewHolder {
         return if(viewType == R.layout.button_next){
+            val layout = R.layout.button_next
             val itemView = LayoutInflater.from(parent.context).inflate(R.layout.button_next, parent, false);
             PaginationButtonsViewHolder(itemView)
         } else {
@@ -67,22 +85,7 @@ class ProductRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (position == products.size) {
-            val paginationButtonsViewHolder = holder as PaginationButtonsViewHolder
-            paginationButtonsViewHolder.nextButton!!.setOnClickListener {
-                viewModel.fetch(categoryId, true, searchRequest)
-            }
-            if (currentPage == 1) {
-                paginationButtonsViewHolder.previousButton.visibility = INVISIBLE
-            } else {
-                paginationButtonsViewHolder.previousButton.visibility = VISIBLE
-                paginationButtonsViewHolder.previousButton!!.setOnClickListener {
-                    viewModel.fetch(categoryId, false, searchRequest)
-                }
-            }
-
-
-        } else {
+        if (position != products.size) {
             val productsViewHolder = holder as ProductsViewHolder
             productsViewHolder.itemTitle.text = products[position].name
             productsViewHolder.itemPrice.text = products[position].price + "€"
@@ -92,9 +95,10 @@ class ProductRecyclerViewAdapter(
             val imageLink = products[position].imageLink
             //holder.itemImage.load(imageLink)
             Glide.with(productsViewHolder.itemView.context).load(imageLink).into(productsViewHolder.itemImage);
+        } else {
+            val buttonsViewHolder = holder as PaginationButtonsViewHolder
+            buttonsViewHolder.container.minWidth = screenWidth.toInt()
         }
-
-
     }
 
     override fun getItemCount(): Int {

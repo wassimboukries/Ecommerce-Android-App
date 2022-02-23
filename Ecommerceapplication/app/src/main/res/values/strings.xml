@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Ecommerce application</string>
     <string name="no_products_found">Sorry! No products are found</string>
+    <string name="next_page">Next Page</string>
+    <string name="previous_page">Previous</string>
 </resources>

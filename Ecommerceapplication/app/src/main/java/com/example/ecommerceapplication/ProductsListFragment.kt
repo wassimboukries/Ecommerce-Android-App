@@ -53,6 +53,8 @@ class ProductsListFragment : Fragment() {
             currentPage = page
         }
 
+        val screenWidth = resources.displayMetrics.run { widthPixels }
+
         var progressBar : ProgressBar = view.findViewById(R.id.progressBar)
 
         viewModel.liveData.observe(viewLifecycleOwner) { products ->
@@ -61,7 +63,7 @@ class ProductsListFragment : Fragment() {
                 recyclerView.visibility = GONE
                 noProductText.visibility = VISIBLE
             } else {
-                adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, id, currentPage, args.searchString)
+                adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, id, currentPage, args.searchString, screenWidth)
                 recyclerView.adapter = adapterProductsList
             }
         }

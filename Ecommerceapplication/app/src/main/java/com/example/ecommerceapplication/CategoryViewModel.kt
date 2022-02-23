@@ -1,19 +1,24 @@
 package com.example.ecommerceapplication
 
+import android.app.Application
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.room.Room
+import com.example.ecommerceapplication.Entity.User
 import com.example.ecommerceapplication.Model.CategoryModel
+import com.example.ecommerceapplication.Model.ProductModel
+import com.example.ecommerceapplication.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import kotlin.coroutines.coroutineContext
 
-class CategoryViewModel : ViewModel() {
+class CategoryViewModel(application: Application) : AndroidViewModel(application){
     // TODO: Implement the ViewModel
     val liveData = MutableLiveData<MutableList<CategoryModel>>()
+    val liveDataUsers = MutableLiveData<List<User>>()
+    private val context = getApplication<Application>().applicationContext
     val categoriesNames = arrayOf("TVs & Projectors", "Laptops & Computers", "Apple", "Video Games, Consoles & VR",
             "Cell Phones",
             "Major Appliances",
@@ -68,5 +73,24 @@ class CategoryViewModel : ViewModel() {
                 print("Error: Get request returned no response")
             }*/
         }
+    }
+
+    fun addUser() {
+        val db = Room.databaseBuilder(
+            context,
+            AppDatabase::class.java, "myUsersDataBase"
+        ).build()
+
+        val userDao = db.userDao()
+
+        val myUser = User(121, "Wassim", "Boukries")
+
+        viewModelScope.launch(Dispatchers.IO) {
+            userDao.insert(myUser)
+            val users = userDao.getAll()
+            Log.v(TAG, users.toString())
+            liveDataUsers.postValue(users)
+        }
+
     }
 }

@@ -30,8 +30,10 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:layoutManager="GridLayoutManager"
         tools:listitem="@layout/recycler_view_item_3"
         tools:spanCount="2" />
@@ -46,5 +48,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/ProductsRecyclerView"
+        app:layout_constraintEnd_toEndOf="@+id/ProductsRecyclerView"
+        app:layout_constraintStart_toStartOf="@+id/ProductsRecyclerView"
+        app:layout_constraintTop_toTopOf="@+id/ProductsRecyclerView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.ecommerceapplication
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,11 @@ class CategoryFragment : Fragment() , FragmentManager.OnBackStackChangedListener
         val view = inflater.inflate(R.layout.category_fragment, container, false)
         activity?.title = "Categories";
         activity?.supportFragmentManager?.addOnBackStackChangedListener(this);
+        viewModel.addUser()
+        viewModel.liveDataUsers.observe(viewLifecycleOwner) { users ->
+            Log.v(TAG, users.toString())
+        }
+
         return view
     }
 

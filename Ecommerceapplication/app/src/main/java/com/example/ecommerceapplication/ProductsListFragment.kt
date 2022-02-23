@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.View.*
+import android.widget.ProgressBar
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -45,15 +46,17 @@ class ProductsListFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         val noProductText : TextView = view.findViewById(R.id.noProductsTextView)
 
-        viewModel.fetch(id, true, args.searchString)
+        viewModel.fetch(id, null, args.searchString)
 
         var currentPage : Int = 1;
         viewModel.liveCurrentPage.observe(viewLifecycleOwner) { page ->
             currentPage = page
         }
 
-        viewModel.liveData.observe(viewLifecycleOwner) { products ->
+        var progressBar : ProgressBar = view.findViewById(R.id.progressBar)
 
+        viewModel.liveData.observe(viewLifecycleOwner) { products ->
+            progressBar.visibility = GONE
             if (products.isEmpty()) {
                 recyclerView.visibility = GONE
                 noProductText.visibility = VISIBLE
@@ -62,6 +65,7 @@ class ProductsListFragment : Fragment() {
                 recyclerView.adapter = adapterProductsList
             }
         }
+
 
 
         return view

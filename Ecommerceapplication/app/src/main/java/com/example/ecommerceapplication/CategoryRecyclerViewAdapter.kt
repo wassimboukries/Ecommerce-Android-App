@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.ecommerceapplication.Model.CategoryModel
+import com.example.ecommerceapplication.model.CategoryModel
 
 class CategoryRecyclerViewAdapter(private val categories : MutableList<CategoryModel>) : RecyclerView.Adapter<CategoryRecyclerViewAdapter.ViewHolder>() {
     class ViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {

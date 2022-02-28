@@ -1,10 +1,10 @@
-package com.example.ecommerceapplication.DAO
+package com.example.ecommerceapplication.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.ecommerceapplication.Entity.User
+import com.example.ecommerceapplication.entity.User
 
 @Dao
 interface UserDao {
@@ -23,6 +23,9 @@ interface UserDao {
 
     @Insert
     fun insert(user: User)
+
+    @Query("INSERT por")
+    fun addFavoriteProductToUser(user : User, productId : String)
 
 
     @Delete

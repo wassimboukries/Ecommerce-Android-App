@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ecommerceapplication.Model.CategoryModel
+import com.example.ecommerceapplication.model.CategoryModel
 import org.json.JSONArray
 import java.io.BufferedReader
 import okio.use as use1

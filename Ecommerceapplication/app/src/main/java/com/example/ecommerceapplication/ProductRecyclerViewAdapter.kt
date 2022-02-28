@@ -19,7 +19,8 @@ class ProductRecyclerViewAdapter(
     private val categoryId : String,
     private val currentPage : Int,
     private val searchRequest : String?,
-    private val screenWidth : Int
+    private val screenWidth : Int,
+    private val progressBar : ProgressBar
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class ProductsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var itemTitle : TextView = itemView.findViewById(R.id.ProductTitle1)
@@ -44,6 +45,7 @@ class ProductRecyclerViewAdapter(
             }
         }
     }
+
     inner class PaginationButtonsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var nextButton : Button = itemView.findViewById(R.id.NextButton)
         var previousButton : Button = itemView.findViewById(R.id.PreviousButton)
@@ -54,6 +56,7 @@ class ProductRecyclerViewAdapter(
             params.width = screenWidth
             container.layoutParams = params
             nextButton.setOnClickListener {
+                progressBar.visibility = VISIBLE
                 viewModel.fetch(categoryId, true, searchRequest)
             }
             if (currentPage == 1) {
@@ -61,6 +64,7 @@ class ProductRecyclerViewAdapter(
             } else {
                 previousButton.visibility = VISIBLE
                 previousButton.setOnClickListener {
+                    progressBar.visibility = VISIBLE
                     viewModel.fetch(categoryId, false, searchRequest)
                 }
             }
@@ -72,7 +76,7 @@ class ProductRecyclerViewAdapter(
         parent: ViewGroup,
         viewType: Int
     ): RecyclerView.ViewHolder {
-        return if(viewType == R.layout.button_next){
+        return if(viewType == R.layout.button_next) {
             val layout = R.layout.button_next
             val itemView = LayoutInflater.from(parent.context).inflate(R.layout.button_next, parent, false);
             PaginationButtonsViewHolder(itemView)
@@ -80,7 +84,6 @@ class ProductRecyclerViewAdapter(
             val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_3, parent, false);
             ProductsViewHolder(itemView)
         }
-
         //val v = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_3, parent, false)
     }
 

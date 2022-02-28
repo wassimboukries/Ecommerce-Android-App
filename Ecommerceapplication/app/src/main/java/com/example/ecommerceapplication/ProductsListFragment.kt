@@ -35,7 +35,7 @@ class ProductsListFragment : Fragment() {
 
 
         val name = args.categoryName
-        activity?.title = name;
+        activity?.title = name
         (activity as MainActivity?)!!.showUpButton()
         val id = args.categoryId
         //val productName = view.findViewById<TextView>(R.id.productName)
@@ -57,18 +57,18 @@ class ProductsListFragment : Fragment() {
 
         var progressBar : ProgressBar = view.findViewById(R.id.progressBar)
 
+        progressBar.visibility = VISIBLE
+
         viewModel.liveData.observe(viewLifecycleOwner) { products ->
             progressBar.visibility = GONE
             if (products.isEmpty()) {
                 recyclerView.visibility = GONE
                 noProductText.visibility = VISIBLE
             } else {
-                adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, id, currentPage, args.searchString, screenWidth)
+                adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, id, currentPage, args.searchString, screenWidth, progressBar)
                 recyclerView.adapter = adapterProductsList
             }
         }
-
-
 
         return view
     }
@@ -98,9 +98,6 @@ class ProductsListFragment : Fragment() {
                 //Log.v(TAG, p0)
                 return true
             }
-
         })
-
     }
-
 }

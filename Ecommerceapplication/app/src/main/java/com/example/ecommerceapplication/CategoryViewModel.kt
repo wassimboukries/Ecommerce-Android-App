@@ -7,13 +7,15 @@ import androidx.room.Room
 import com.example.ecommerceapplication.entity.User
 import com.example.ecommerceapplication.model.CategoryModel
 import com.example.ecommerceapplication.database.AppDatabase
+import com.example.ecommerceapplication.entity.Products
+import com.example.ecommerceapplication.entity.UserWithProducts
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CategoryViewModel(application: Application) : AndroidViewModel(application){
     // TODO: Implement the ViewModel
     val liveData = MutableLiveData<MutableList<CategoryModel>>()
-    val liveDataUsers = MutableLiveData<List<User>>()
+    val liveDataUsers = MutableLiveData<List<UserWithProducts>>()
     private val context = getApplication<Application>().applicationContext
     val categoriesNames = arrayOf("TVs & Projectors", "Laptops & Computers", "Apple", "Video Games, Consoles & VR",
             "Cell Phones",
@@ -33,7 +35,7 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
     val categoriesId = arrayOf("abcat0101000", "abcat0502000", "pcmcat128500050005", "")
     val categoriesImagesLinks = arrayOf(R.drawable.tv, R.drawable.laptops, R.drawable.apple, R.drawable.video_games, R.drawable.phones, R.drawable.mappls, R.drawable.tablets, R.drawable.speakers, R.drawable.headphones,
         R.drawable.pcgaming, R.drawable.smappls, R.drawable.wearabletech, R.drawable.smarthome, R.drawable.cameras, R.drawable.toys, R.drawable.printers, R.drawable.health, R.drawable.etranspo)
-    private val TAG = "Category"
+    private val TAG = "myDB"
 
     fun fetch(){
         viewModelScope.launch(Dispatchers.IO) {
@@ -78,14 +80,18 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
         ).build()
 
         val userDao = db.userDao()
+        val productsDao = db.favoriteProductsDao()
 
-        val favoriteProducts : MutableList<String> = mutableListOf()
-        val myUser = User(121, "Wassim", "Boukries", "wassim-boukries@live.fr", favoriteProducts)
+        val favoriteProducts : MutableList<String> = mutableListOf("aaa")
+        val myUser = User(121, "Wassim", "Boukries", "wassim-boukries@live.fr")
 
         viewModelScope.launch(Dispatchers.IO) {
             userDao.insert(myUser)
 
-            val users = userDao.getAll()
+            productsDao.insert(Products(7878787, 8, "some", 121))
+            productsDao.insert(Products(787, 8, "some", 125))
+
+            val users = userDao.getUsersWithPlaylists()
             Log.v(TAG, users.toString())
             liveDataUsers.postValue(users)
         }

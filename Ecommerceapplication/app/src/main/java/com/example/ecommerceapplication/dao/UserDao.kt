@@ -1,17 +1,19 @@
 package com.example.ecommerceapplication.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.example.ecommerceapplication.entity.User
+import com.example.ecommerceapplication.entity.UserWithProducts
 
 @Dao
 interface UserDao {
     @Query("SELECT * FROM user")
     fun getAll(): List<User>
 
-    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
+    @Transaction
+    @Query("SELECT * FROM user")
+    fun getUsersWithPlaylists(): List<UserWithProducts>
+
+    @Query("SELECT * FROM user WHERE userId IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<User>
 
     @Query("SELECT * FROM user WHERE first_name LIKE :first AND " +
@@ -24,9 +26,9 @@ interface UserDao {
     @Insert
     fun insert(user: User)
 
-    @Query("INSERT por")
+    /*@Query("INSERT INTO user()")
     fun addFavoriteProductToUser(user : User, productId : String)
-
+*/
 
     @Delete
     fun delete(user: User)

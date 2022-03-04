@@ -70,6 +70,10 @@ class ProductsListFragment : Fragment() {
             }
         }
 
+        viewModel.liveDataUsers.observe(viewLifecycleOwner) { userFavorites ->
+            Log.v("ProductsListFragment", userFavorites.toString())
+        }
+
         return view
     }
 

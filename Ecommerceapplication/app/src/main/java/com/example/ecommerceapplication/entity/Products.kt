@@ -8,6 +8,5 @@ import androidx.room.PrimaryKey
 data class Products(
     @PrimaryKey(autoGenerate = true) val uid: Int,
     @ColumnInfo() val productId : Int,
-    @ColumnInfo(name = "creation_date") val creationDate: String,
     @ColumnInfo(name = "user_creator_id") val userCreatorId: Int
 )

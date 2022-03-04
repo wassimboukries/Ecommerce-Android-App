@@ -1,6 +1,7 @@
 package com.example.ecommerceapplication.dao
 
 import androidx.room.*
+import com.example.ecommerceapplication.entity.Products
 import com.example.ecommerceapplication.entity.User
 import com.example.ecommerceapplication.entity.UserWithProducts
 
@@ -11,7 +12,11 @@ interface UserDao {
 
     @Transaction
     @Query("SELECT * FROM user")
-    fun getUsersWithPlaylists(): List<UserWithProducts>
+    fun getUsersWithProducts(): List<UserWithProducts>
+
+    @Transaction
+    @Query("SELECT * FROM user WHERE userId = (:id)")
+    fun getUserProducts(id : Int): List<UserWithProducts>
 
     @Query("SELECT * FROM user WHERE userId IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<User>

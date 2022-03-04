@@ -19,5 +19,5 @@ interface ProductsDao {
     fun insert(product: Products)
 
     @Delete
-    fun delete(user: User)
+    fun delete(product: Products)
 }

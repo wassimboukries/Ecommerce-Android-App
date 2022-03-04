@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ecommerceapplication.model.ProductModel
 
 class ProductsListFragment : Fragment() {
 
@@ -65,8 +66,13 @@ class ProductsListFragment : Fragment() {
                 recyclerView.visibility = GONE
                 noProductText.visibility = VISIBLE
             } else {
-                adapterProductsList = ProductRecyclerViewAdapter(products, viewModel, id, currentPage, args.searchString, screenWidth, progressBar)
-                recyclerView.adapter = adapterProductsList
+
+                viewModel.isProductFavorite(products)
+
+                viewModel.liveProductsFavorite.observe(viewLifecycleOwner) { productsWithFav ->
+                    adapterProductsList = ProductRecyclerViewAdapter(productsWithFav, viewModel, id, currentPage, args.searchString, screenWidth, progressBar)
+                    recyclerView.adapter = adapterProductsList
+                }
             }
         }
 

@@ -2,18 +2,16 @@ package com.example.ecommerceapplication
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.room.Room
 import com.example.ecommerceapplication.database.AppDatabase
 import com.example.ecommerceapplication.entity.Products
 import com.example.ecommerceapplication.entity.UserWithProducts
 import com.example.ecommerceapplication.model.ProductModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import org.json.JSONObject
+
 
 class ProductsListViewModel(application: Application) : AndroidViewModel(application) {
     // TODO: Implement the ViewModel
@@ -22,8 +20,11 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
     private var pageNumber : Int = 1
     private val TAG = "Category"
     val liveDataUsers = MutableLiveData<List<UserWithProducts>>()
-    val liveIsFavorite = MutableLiveData<Boolean>()
+    val liveProductsFavorite = MutableLiveData<MutableList<ProductModel>>()
     private val context = getApplication<Application>().applicationContext
+
+    val viewModelJob = Job()
+    val viewModelCoroutineScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
     fun fetch(categoryId : String, isNextPage : Boolean?, searchString: String?) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -62,7 +63,8 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
                             reviewCount = "0";
                         }
 
-                        val product = ProductModel(id.toString(), name, imageLink, price, rating, reviewCount, url, isProductFavorite(id.toString()))
+
+                        val product = ProductModel(id.toString(), name, imageLink, price, rating, reviewCount, url, false)
                         products.add(product)
                     }
                     //childrenList.get (0..10)
@@ -90,7 +92,7 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
         val userDao = db.userDao()
 
         viewModelScope.launch(Dispatchers.IO) {
-            productsDao.insert(Products(2, productId.toInt(), 121))
+            productsDao.insert(Products(0, productId.toInt(), 121))
 
             val userFavorites = userDao.getUserProducts(121)
             liveDataUsers.postValue(userFavorites)
@@ -106,33 +108,42 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
         val productsDao = db.favoriteProductsDao()
         val userDao = db.userDao()
 
-        viewModelScope.launch(Dispatchers.IO) {
-            productsDao.delete(Products(2, productId.toInt(), 121))
+        viewModelCoroutineScope.launch(Dispatchers.IO) {
+            productsDao.delete(Products(0, productId.toInt(), 121))
 
             val userFavorites = userDao.getUserProducts(121)
             liveDataUsers.postValue(userFavorites)
+            db.close()
         }
+
+
     }
 
-    fun isProductFavorite(productId : String) : Boolean {
+    fun isProductFavorite(products : MutableList<ProductModel>) {
         val db = Room.databaseBuilder(
             context,
             AppDatabase::class.java, "myUsersDataBase"
         ).build()
 
-        val userDao = db.userDao()
-        var isFavorite = false
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelCoroutineScope.launch(Dispatchers.IO) {
+            val userDao = db.userDao()
             val userFavorites = userDao.getUserProducts(121)
+
             if (userFavorites.isNotEmpty()) {
-                val favorites = userFavorites[0].favoritesList
-                val product = favorites.find {
-                    it.productId == productId.toInt()
+                for (product in products) {
+
+                        val favorites = userFavorites[0].favoritesList
+                        val productFavorite = favorites.find {
+                            it.productId == product.id.toInt()
+                        }
+                        product.isFavorite = productFavorite != null
                 }
-                isFavorite = product != null
+                liveProductsFavorite.postValue(products)
             }
+            db.close()
         }
 
-        return isFavorite;
+
+
     }
 }

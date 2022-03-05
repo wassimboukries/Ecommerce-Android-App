@@ -33,23 +33,19 @@ class ProductRecyclerViewAdapter(
         var itemFavorite : ImageView = itemView.findViewById(R.id.Favorite)
 
         lateinit var itemUrl : String
+        lateinit var itemId : String
+        var itemIsFavorite by Delegates.notNull<Boolean>()
 
         init {
 
             itemView.setOnClickListener {
                 val toast = Toast.makeText(itemView.context, itemTitle.text, Toast.LENGTH_LONG)
                 toast.show()
-                /*val intent = Intent(Intent.ACTION_VIEW, Uri.parse(itemUrl))
-                startActivity(itemView.context, intent, null);*/
                 val action = ProductsListFragmentDirections.actionProductFragmentToProductDetailsFragment(itemUrl,
                     itemTitle.text as String
                 )
                 itemView.findNavController().navigate(action)
             }
-        }
-
-        fun setFavorite(itemIsFavorite : Boolean) {
-
         }
     }
 
@@ -102,27 +98,28 @@ class ProductRecyclerViewAdapter(
             productsViewHolder.itemRating.rating = products[position].rating.toFloat()
             productsViewHolder.itemReviewCount.text = products[position].reviewCount
             productsViewHolder.itemUrl = products[position].url
+            productsViewHolder.itemIsFavorite = products[position].isFavorite
+            productsViewHolder.itemId = products[position].id
             //productsViewHolder.setFavorite(products[position].isFavorite)
 
-            val productId = products[position].id
-
-            if (products[position].isFavorite) {
+            if (!productsViewHolder.itemIsFavorite) {
                 productsViewHolder.itemFavorite.load(R.drawable.ic_baseline_favorite_border_24)
             } else {
                 productsViewHolder.itemFavorite.load(R.drawable.ic_outline_favorite_24)
             }
 
-            productsViewHolder.itemFavorite.setOnClickListener{
-                if (products[position].isFavorite) {
+            productsViewHolder.itemFavorite.setOnClickListener {
+                productsViewHolder.itemIsFavorite = if (productsViewHolder.itemIsFavorite) {
                     productsViewHolder.itemFavorite.load(R.drawable.ic_baseline_favorite_border_24)
-                    viewModel.removeFavoriteProduct(productId)
-                    products[position].isFavorite = false
+                    viewModel.removeFavoriteProduct(productsViewHolder.itemId)
+                    false
                 } else {
                     productsViewHolder.itemFavorite.load(R.drawable.ic_outline_favorite_24)
-                    viewModel.addFavoriteProduct(productId);
-                    products[position].isFavorite = true
+                    viewModel.addFavoriteProduct(productsViewHolder.itemId);
+                    true
                 }
             }
+
             val imageLink = products[position].imageLink
             //holder.itemImage.load(imageLink)
             Glide.with(productsViewHolder.itemView.context).load(imageLink).into(productsViewHolder.itemImage);

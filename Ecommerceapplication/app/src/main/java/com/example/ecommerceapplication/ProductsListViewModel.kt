@@ -111,7 +111,7 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
         val userDao = db.userDao()
 
         viewModelScope.launch(Dispatchers.IO) {
-            productsDao.delete(Products(0, productId.toInt(), 121))
+            productsDao.deleteByProductIdAndUserId(productId.toInt(), 121)
 
             val userFavorites = userDao.getUserProducts(121)
             liveDataUsers.postValue(userFavorites)
@@ -130,8 +130,9 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
             val userFavorites = userDao.getUserProducts(121)
 
             if (userFavorites.isNotEmpty()) {
+                val favorites = userFavorites[0].favoritesList
                 for (product in products) {
-                    val favorites = userFavorites[0].favoritesList
+
                     val productFavorite = favorites.find {
                         it.productId == product.id.toInt()
                     }

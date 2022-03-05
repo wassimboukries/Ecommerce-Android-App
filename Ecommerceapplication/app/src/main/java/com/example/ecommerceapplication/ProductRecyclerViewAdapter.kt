@@ -1,5 +1,7 @@
 package com.example.ecommerceapplication
 
+import android.nfc.Tag
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -12,11 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bumptech.glide.Glide
 import com.example.ecommerceapplication.model.ProductModel
+import kotlin.math.log
 import kotlin.properties.Delegates
 
 
 class ProductRecyclerViewAdapter(
-    private val products: MutableList<ProductModel>,
+    private var products: MutableList<ProductModel>,
     private val viewModel: ProductsListViewModel,
     private val categoryId : String,
     private val currentPage : Int,
@@ -24,6 +27,8 @@ class ProductRecyclerViewAdapter(
     private val screenWidth : Int,
     private val progressBar : ProgressBar
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var productsIsFavorite = mutableListOf<Boolean>()
+
     inner class ProductsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var itemTitle : TextView = itemView.findViewById(R.id.ProductTitle1)
         var itemPrice : TextView = itemView.findViewById(R.id.ProductPrice1)
@@ -31,6 +36,7 @@ class ProductRecyclerViewAdapter(
         var itemImage : ImageView = itemView.findViewById(R.id.imageProduct1)
         var itemReviewCount : TextView = itemView.findViewById(R.id.ProductReviewCount)
         var itemFavorite : ImageView = itemView.findViewById(R.id.Favorite)
+        //val holder = ProductsViewHolder(itemView)
 
         lateinit var itemUrl : String
         lateinit var itemId : String
@@ -46,6 +52,20 @@ class ProductRecyclerViewAdapter(
                 )
                 itemView.findNavController().navigate(action)
             }
+
+            itemFavorite.setOnClickListener {
+                productsIsFavorite[bindingAdapterPosition] = if (productsIsFavorite[bindingAdapterPosition]) {
+                    itemFavorite.load(R.drawable.ic_baseline_favorite_border_24)
+                    viewModel.removeFavoriteProduct(itemId)
+                    //notifyItemChanged(position, false)
+                    false
+                } else {
+                    itemFavorite.load(R.drawable.ic_outline_favorite_24)
+                    viewModel.addFavoriteProduct(itemId)
+                    true
+                }
+            }
+
         }
     }
 
@@ -81,13 +101,32 @@ class ProductRecyclerViewAdapter(
     ): RecyclerView.ViewHolder {
         return if(viewType == R.layout.button_next) {
             val layout = R.layout.button_next
-            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.button_next, parent, false);
+            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.button_next, parent, false)
             PaginationButtonsViewHolder(itemView)
         } else {
             val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_3, parent, false);
+            for (product in products) {
+                productsIsFavorite.add(product.isFavorite)
+            }
             ProductsViewHolder(itemView)
         }
         //val v = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_3, parent, false)
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads : List<Any>) {
+        if(payloads.isNotEmpty()) {
+            if (payloads[0] is Boolean) {
+                holder as ProductsViewHolder
+                productsIsFavorite[position] = payloads[0] as Boolean
+                if (!productsIsFavorite[position]) {
+                    holder.itemFavorite.load(R.drawable.ic_baseline_favorite_border_24)
+                } else {
+                    holder.itemFavorite.load(R.drawable.ic_outline_favorite_24)
+                }
+            }
+        }else {
+            super.onBindViewHolder(holder,position, payloads);
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -102,22 +141,10 @@ class ProductRecyclerViewAdapter(
             productsViewHolder.itemId = products[position].id
             //productsViewHolder.setFavorite(products[position].isFavorite)
 
-            if (!productsViewHolder.itemIsFavorite) {
+            if (!productsIsFavorite[position]) {
                 productsViewHolder.itemFavorite.load(R.drawable.ic_baseline_favorite_border_24)
             } else {
                 productsViewHolder.itemFavorite.load(R.drawable.ic_outline_favorite_24)
-            }
-
-            productsViewHolder.itemFavorite.setOnClickListener {
-                productsViewHolder.itemIsFavorite = if (productsViewHolder.itemIsFavorite) {
-                    productsViewHolder.itemFavorite.load(R.drawable.ic_baseline_favorite_border_24)
-                    viewModel.removeFavoriteProduct(productsViewHolder.itemId)
-                    false
-                } else {
-                    productsViewHolder.itemFavorite.load(R.drawable.ic_outline_favorite_24)
-                    viewModel.addFavoriteProduct(productsViewHolder.itemId);
-                    true
-                }
             }
 
             val imageLink = products[position].imageLink

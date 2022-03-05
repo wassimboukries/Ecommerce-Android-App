@@ -20,4 +20,8 @@ interface ProductsDao {
 
     @Delete
     fun delete(product: Products)
+
+    @Query("DELETE FROM products WHERE (:productId) = productId AND (:userId) = user_creator_id")
+    fun deleteByProductIdAndUserId(productId : Int, userId : Int)
+
 }

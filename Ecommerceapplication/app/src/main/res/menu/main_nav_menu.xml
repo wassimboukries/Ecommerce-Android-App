@@ -3,15 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/nav_search"
-        android:icon="@drawable/icone_search"
-        android:title="Search"
-        app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="ifRoom|withText"/>
-
-    <item
         android:id="@+id/nav_favorite"
-        android:icon="@drawable/icone_search"
         android:title="Favorites"
         app:showAsAction="withText"/>
 </menu>

@@ -34,8 +34,8 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch(Dispatchers.IO) {
             userDao.insert(myUser)
 
-            productsDao.insert(Products(7878787, 8,  121))
-            productsDao.insert(Products(787, 8,  125))
+            //productsDao.insert(Products(7878787, 8,  121))
+            //productsDao.insert(Products(787, 8,  125))
 
             val users = userDao.getUsersWithProducts()
             Log.v(TAG, users.toString())

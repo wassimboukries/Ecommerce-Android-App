@@ -8,5 +8,11 @@ import androidx.room.PrimaryKey
 data class Products(
     @PrimaryKey(autoGenerate = true) val uid: Int,
     @ColumnInfo val productId : Int,
-    @ColumnInfo(name = "user_creator_id") val userCreatorId: Int
+    @ColumnInfo(name = "user_creator_id") val userCreatorId: Int,
+    val name : String,
+    val imageLink : String,
+    val price : String,
+    val rating : String,
+    val reviewCount : String,
+    val url : String
 )

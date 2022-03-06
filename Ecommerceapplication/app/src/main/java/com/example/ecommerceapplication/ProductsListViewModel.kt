@@ -3,6 +3,7 @@ package com.example.ecommerceapplication
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
+import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
 import com.example.ecommerceapplication.database.AppDatabase
@@ -21,13 +22,14 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
     private var pageNumber : Int = 1
     private val TAG = "Category"
     val liveDataUsers = MutableLiveData<List<UserWithProducts>>()
+    val liveFavorites = MutableLiveData<List<Products>>()
     val liveProductsFavorite = MutableLiveData<MutableList<ProductModel>>()
     private val context = getApplication<Application>().applicationContext
 
     val viewModelJob = Job()
     val viewModelCoroutineScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
-    fun fetch(categoryId : String, isNextPage : Boolean?, searchString: String?) {
+    fun fetch(categoryId : String?, isNextPage : Boolean?, searchString: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             if (isNextPage != null) if (isNextPage) ++pageNumber else --pageNumber
 
@@ -83,7 +85,7 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    fun addFavoriteProduct(productId : String) {
+    fun addFavoriteProduct(product : ProductModel) {
         val db = Room.databaseBuilder(
             context,
             AppDatabase::class.java, "myUsersDataBase"
@@ -93,7 +95,7 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
         val userDao = db.userDao()
 
         viewModelScope.launch(Dispatchers.IO) {
-            productsDao.insert(Products(0, productId.toInt(), 121))
+            productsDao.insert(Products(0, product.id.toInt(), 121, product.name, product.imageLink, product.price, product.rating, product.reviewCount, product.url))
 
             val userFavorites = userDao.getUserProducts(121)
             liveDataUsers.postValue(userFavorites)
@@ -141,6 +143,30 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
             }
             liveProductsFavorite.postValue(products)
             //db.close()
+        }
+    }
+
+    fun getFavoriteProducts() {
+        val db = Room.databaseBuilder(
+            context,
+            AppDatabase::class.java, "myUsersDataBase"
+        ).build()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val userDao = db.userDao()
+
+            val userFavorites = userDao.getUserProducts(121)
+            var favorites : List<Products> = listOf()
+            val favoriteProducts : MutableList<ProductModel> = mutableListOf()
+
+            if (userFavorites.isNotEmpty()) {
+                favorites = userFavorites[0].favoritesList
+                for (favorite in favorites) {
+                    favoriteProducts.add(ProductModel(favorite.productId.toString(), favorite.name, favorite.imageLink, favorite.price, favorite.rating, favorite.reviewCount, favorite.url, true))
+                }
+            }
+
+            liveData.postValue(favoriteProducts)
         }
     }
 }

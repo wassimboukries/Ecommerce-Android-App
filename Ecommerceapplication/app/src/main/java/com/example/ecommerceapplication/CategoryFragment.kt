@@ -2,12 +2,11 @@ package com.example.ecommerceapplication
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ecommerceapplication.model.CategoryModel
@@ -16,7 +15,7 @@ import java.io.BufferedReader
 import okio.use as use1
 
 
-class CategoryFragment : Fragment() , FragmentManager.OnBackStackChangedListener{
+class CategoryFragment : Fragment(){
     private val viewModel: CategoryViewModel by viewModels()
     private val TAG = "Category"
 
@@ -27,11 +26,11 @@ class CategoryFragment : Fragment() , FragmentManager.OnBackStackChangedListener
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.category_fragment, container, false)
         activity?.title = "Categories";
-        activity?.supportFragmentManager?.addOnBackStackChangedListener(this);
         //viewModel.addUser()
         viewModel.liveDataUsers.observe(viewLifecycleOwner) { users ->
             Log.v(TAG, users.toString())
         }
+        setHasOptionsMenu(true)
 
         return view
     }
@@ -43,10 +42,6 @@ class CategoryFragment : Fragment() , FragmentManager.OnBackStackChangedListener
         val recyclerView : RecyclerView = view.findViewById(R.id.CategoryRecyclerView)
         recyclerView.layoutManager = layoutManager
 
-        /*viewModel.liveData.observe(viewLifecycleOwner) { categories ->
-            val adapterCategory = CategoryRecyclerViewAdapter(categories)
-            recyclerView.adapter = adapterCategory
-        }*/
         val categories = getCategories()
 
         val adapterCategory = CategoryRecyclerViewAdapter(categories)
@@ -65,15 +60,16 @@ class CategoryFragment : Fragment() , FragmentManager.OnBackStackChangedListener
         return categories
     }
 
-    override fun onBackStackChanged() {
-        if (activity != null) {
-            // enable Up button only if there are entries on the backstack
-            if (requireActivity().supportFragmentManager.backStackEntryCount < 1) {
-                (activity as MainActivity?)!!.hideUpButton()
-            }
-        }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_nav_menu, menu)
     }
 
-    // to deplace to VieModel class
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId === R.id.nav_favorite) {
+            val action = CategoryFragmentDirections.actionCategoryFragmentToProductFragment(null, "Favorite Products", null)
+            findNavController().navigate(action)
+        }
+        return true
+    }
 
 }

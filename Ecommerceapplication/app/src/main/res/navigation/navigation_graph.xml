@@ -23,7 +23,8 @@
         tools:layout="@layout/products_list_fragment" >
         <argument
             android:name="CategoryId"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
         <argument
             android:name="CategoryName"
             app:argType="string" />

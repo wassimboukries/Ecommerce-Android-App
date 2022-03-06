@@ -30,29 +30,30 @@ class ProductsListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
-        val view = inflater.inflate(R.layout.products_list_fragment, container, false)
-        //val name = ProductFragmentArgs.fromBundle(arguments).productName
 
+        val view = inflater.inflate(R.layout.products_list_fragment, container, false)
 
         val name = args.categoryName
         activity?.title = name
-        (activity as MainActivity?)!!.showUpButton()
+
+        if (args.categoryId != null) {
+            setHasOptionsMenu(true)
+        }
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val id = args.categoryId
-        //val productName = view.findViewById<TextView>(R.id.productName)
-        //productName.text = name
+
 
         val layoutManager = GridLayoutManager(context, 2)
         val recyclerView : RecyclerView = view.findViewById(R.id.ProductsRecyclerView)
         recyclerView.layoutManager = layoutManager
         val noProductText : TextView = view.findViewById(R.id.noProductsTextView)
 
-        viewModel.fetch(id, null, args.searchString)
-
-        var currentPage : Int = 1;
-        viewModel.liveCurrentPage.observe(viewLifecycleOwner) { page ->
-            currentPage = page
-        }
 
         val screenWidth = resources.displayMetrics.run { widthPixels }
 
@@ -60,27 +61,49 @@ class ProductsListFragment : Fragment() {
 
         progressBar.visibility = VISIBLE
 
-        viewModel.liveData.observe(viewLifecycleOwner) { products ->
-            progressBar.visibility = GONE
-            if (products.isEmpty()) {
-                recyclerView.visibility = GONE
-                noProductText.visibility = VISIBLE
-            } else {
 
-                viewModel.isProductFavorite(products)
 
-                viewModel.liveProductsFavorite.observe(viewLifecycleOwner) { productsWithFav ->
-                    adapterProductsList = ProductRecyclerViewAdapter(productsWithFav, viewModel, id, currentPage, args.searchString, screenWidth, progressBar)
+        // handling the case where the fragment should display favorite products
+        if (id == null) {
+            viewModel.getFavoriteProducts()
+
+            viewModel.liveData.observe(viewLifecycleOwner) { userFavorites ->
+                progressBar.visibility = GONE
+
+                if (userFavorites.isEmpty()) {
+                    recyclerView.visibility = GONE
+                    noProductText.visibility = VISIBLE
+                } else {
+                    adapterProductsList = ProductRecyclerViewAdapter(userFavorites, viewModel, null, null, args.searchString, screenWidth, progressBar)
                     recyclerView.adapter = adapterProductsList
+
+                }
+            }
+        } else {
+            viewModel.fetch(id, null, args.searchString)
+
+            var currentPage : Int = 1;
+            viewModel.liveCurrentPage.observe(viewLifecycleOwner) { page ->
+                currentPage = page
+            }
+
+            viewModel.liveData.observe(viewLifecycleOwner) { products ->
+                progressBar.visibility = GONE
+                if (products.isEmpty()) {
+                    recyclerView.visibility = GONE
+                    noProductText.visibility = VISIBLE
+                } else {
+
+                    viewModel.isProductFavorite(products)
+
+                    viewModel.liveProductsFavorite.observe(viewLifecycleOwner) { productsWithFav ->
+                        adapterProductsList = ProductRecyclerViewAdapter(productsWithFav, viewModel, id, currentPage, args.searchString, screenWidth, progressBar)
+                        recyclerView.adapter = adapterProductsList
+                    }
                 }
             }
         }
 
-        viewModel.liveDataUsers.observe(viewLifecycleOwner) { userFavorites ->
-            Log.v("ProductsListFragment", userFavorites.toString())
-        }
-
-        return view
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -110,4 +133,13 @@ class ProductsListFragment : Fragment() {
             }
         })
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId === R.id.nav_favorite) {
+            val action = ProductsListFragmentDirections.actionProductFragmentSelf(null, "Favorite Products", null)
+            findNavController().navigate(action)
+        }
+        return true
+    }
+
 }

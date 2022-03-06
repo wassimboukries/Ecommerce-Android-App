@@ -21,8 +21,8 @@ import kotlin.properties.Delegates
 class ProductRecyclerViewAdapter(
     private var products: MutableList<ProductModel>,
     private val viewModel: ProductsListViewModel,
-    private val categoryId : String,
-    private val currentPage : Int,
+    private val categoryId : String?,
+    private val currentPage : Int?,
     private val searchRequest : String?,
     private val screenWidth : Int,
     private val progressBar : ProgressBar
@@ -61,7 +61,7 @@ class ProductRecyclerViewAdapter(
                     false
                 } else {
                     itemFavorite.load(R.drawable.ic_outline_favorite_24)
-                    viewModel.addFavoriteProduct(itemId)
+                    viewModel.addFavoriteProduct(products[bindingAdapterPosition])
                     true
                 }
             }
@@ -99,8 +99,7 @@ class ProductRecyclerViewAdapter(
         parent: ViewGroup,
         viewType: Int
     ): RecyclerView.ViewHolder {
-        return if(viewType == R.layout.button_next) {
-            val layout = R.layout.button_next
+        return if(viewType == R.layout.button_next && categoryId != null) {
             val itemView = LayoutInflater.from(parent.context).inflate(R.layout.button_next, parent, false)
             PaginationButtonsViewHolder(itemView)
         } else {
@@ -124,7 +123,7 @@ class ProductRecyclerViewAdapter(
                     holder.itemFavorite.load(R.drawable.ic_outline_favorite_24)
                 }
             }
-        }else {
+        } else {
             super.onBindViewHolder(holder,position, payloads);
         }
     }
@@ -154,10 +153,16 @@ class ProductRecyclerViewAdapter(
             val buttonsViewHolder = holder as PaginationButtonsViewHolder
             buttonsViewHolder.container.minWidth = screenWidth.toInt()
         }
+
+
     }
 
     override fun getItemCount(): Int {
-        return products.size + 1
+        return if (categoryId != null) {
+            products.size + 1
+        } else {
+            products.size
+        }
     }
 
    override fun getItemViewType(position: Int): Int {

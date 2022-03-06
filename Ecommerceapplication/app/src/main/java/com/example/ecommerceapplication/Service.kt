@@ -52,7 +52,7 @@ class Service {
         return myResponse
     }
 
-    fun getProductsList(categoryId : String, pageNumber : Int, searchString: String?): String {
+    fun getProductsList(categoryId : String?, pageNumber : Int, searchString: String?): String {
         val client = OkHttpClient()
 
         var paginationString = ""

@@ -1,4 +1,4 @@
-package com.example.ecommerceapplication
+package com.example.ecommerceapplication.ui.productDetail
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import com.example.ecommerceapplication.R
 
 
 class ProductDetailsFragment : Fragment() {
@@ -26,6 +27,8 @@ class ProductDetailsFragment : Fragment() {
 
         val args: ProductDetailsFragmentArgs by navArgs()
         val webView: WebView = view.findViewById(R.id.webView)
+
+        // we display a web view in the fragment with link of the page of the real product in the store
         webView.webViewClient = WebViewClient()
         webView.loadUrl(args.url)
 

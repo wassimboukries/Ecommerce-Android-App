@@ -1,7 +1,6 @@
-package com.example.ecommerceapplication
+package com.example.ecommerceapplication.ui.products
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.View.*
 import android.widget.ProgressBar
@@ -13,7 +12,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ecommerceapplication.model.ProductModel
+import com.example.ecommerceapplication.R
+import com.example.ecommerceapplication.adapter.ProductRecyclerViewAdapter
 
 class ProductsListFragment : Fragment() {
 
@@ -22,7 +22,6 @@ class ProductsListFragment : Fragment() {
     }
 
     private val viewModel: ProductsListViewModel by viewModels()
-    private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapterProductsList: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
     private val args: ProductsListFragmentArgs by navArgs()
 
@@ -36,6 +35,8 @@ class ProductsListFragment : Fragment() {
         val name = args.categoryName
         activity?.title = name
 
+        // we display the search bar and the menu if we are the fragment is displaying products of a specific category,
+        // args.categoryId will be null if the fragment displays the favorite products
         if (args.categoryId != null) {
             setHasOptionsMenu(true)
         }
@@ -57,7 +58,7 @@ class ProductsListFragment : Fragment() {
 
         val screenWidth = resources.displayMetrics.run { widthPixels }
 
-        var progressBar : ProgressBar = view.findViewById(R.id.progressBar)
+        val progressBar : ProgressBar = view.findViewById(R.id.progressBar)
 
         progressBar.visibility = VISIBLE
 
@@ -67,9 +68,11 @@ class ProductsListFragment : Fragment() {
         if (id == null) {
             viewModel.getFavoriteProducts()
 
-            viewModel.liveData.observe(viewLifecycleOwner) { userFavorites ->
+            viewModel.liveProductsList.observe(viewLifecycleOwner) { userFavorites ->
                 progressBar.visibility = GONE
 
+                // we display the message that there are no favorite products in case there aren't any,
+                // otherwise we call the adapter with these favorites
                 if (userFavorites.isEmpty()) {
                     recyclerView.visibility = GONE
                     noProductText.visibility = VISIBLE
@@ -79,23 +82,24 @@ class ProductsListFragment : Fragment() {
 
                 }
             }
+          // if we have to display the products of a category
         } else {
             viewModel.fetch(id, null, args.searchString)
 
-            var currentPage : Int = 1;
+            // we update the current page that we are currently displaying
+            var currentPage = 1;
             viewModel.liveCurrentPage.observe(viewLifecycleOwner) { page ->
                 currentPage = page
             }
 
-            viewModel.liveData.observe(viewLifecycleOwner) { products ->
+            viewModel.liveProductsList.observe(viewLifecycleOwner) { products ->
                 progressBar.visibility = GONE
                 if (products.isEmpty()) {
                     recyclerView.visibility = GONE
                     noProductText.visibility = VISIBLE
                 } else {
-
+                    // we verify if each product of the list is favorite or not (so we can know which icon of the favorite to display)
                     viewModel.isProductFavorite(products)
-
                     viewModel.liveProductsFavorite.observe(viewLifecycleOwner) { productsWithFav ->
                         adapterProductsList = ProductRecyclerViewAdapter(productsWithFav, viewModel, id, currentPage, args.searchString, screenWidth, progressBar)
                         recyclerView.adapter = adapterProductsList
@@ -115,20 +119,18 @@ class ProductsListFragment : Fragment() {
         searchView.queryHint = "Search a product"
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
-                //val viewModel = ProductsListViewModel()
-                //viewModel.fetch(args.categoryId, false)
-               /* val transaction = activity?.supportFragmentManager?.beginTransaction()
-                transaction?.replace(R.id.fragmentContainerView, newInstance())
-                transaction?.disallowAddToBackStack()
-                transaction?.commit()
-                *///onCreateView(_inflater, _container, null)
-                val action = ProductsListFragmentDirections.actionProductFragmentSelf(args.categoryId, args.categoryName, p0)
+                // we navigate into the same fragment (ProductsListFragment) with the search string passed in args
+                val action =
+                    ProductsListFragmentDirections.actionProductFragmentSelf(
+                        args.categoryId,
+                        args.categoryName,
+                        p0
+                    )
                 findNavController().navigate(action)
                 return true
             }
 
             override fun onQueryTextChange(p0: String): Boolean {
-                //Log.v(TAG, p0)
                 return true
             }
         })
@@ -136,7 +138,14 @@ class ProductsListFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId === R.id.nav_favorite) {
-            val action = ProductsListFragmentDirections.actionProductFragmentSelf(null, "Favorite Products", null)
+            // we navigate into the same fragment (ProductsListFragment) with category id to null,
+            // because we are displaying favorite products
+            val action =
+                ProductsListFragmentDirections.actionProductFragmentSelf(
+                    null,
+                    "Favorite Products",
+                    null
+                )
             findNavController().navigate(action)
         }
         return true

@@ -1,45 +1,44 @@
-package com.example.ecommerceapplication
+package com.example.ecommerceapplication.ui.products
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import androidx.lifecycle.Transformations.map
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
+import com.example.ecommerceapplication.rest.ApiHelper
 import com.example.ecommerceapplication.database.AppDatabase
 import com.example.ecommerceapplication.entity.Products
-import com.example.ecommerceapplication.entity.UserWithProducts
 import com.example.ecommerceapplication.model.ProductModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import org.json.JSONObject
 
 
 class ProductsListViewModel(application: Application) : AndroidViewModel(application) {
-    // TODO: Implement the ViewModel
-    val liveData = MutableLiveData<MutableList<ProductModel>>()
+    // the products list
+    val liveProductsList = MutableLiveData<MutableList<ProductModel>>()
+    // which page are we currently displaying
     val liveCurrentPage = MutableLiveData<Int>()
     private var pageNumber : Int = 1
     private val TAG = "Category"
-    val liveDataUsers = MutableLiveData<List<UserWithProducts>>()
-    val liveFavorites = MutableLiveData<List<Products>>()
     val liveProductsFavorite = MutableLiveData<MutableList<ProductModel>>()
     private val context = getApplication<Application>().applicationContext
 
-    val viewModelJob = Job()
-    val viewModelCoroutineScope = CoroutineScope(Dispatchers.IO + viewModelJob)
-
+    /**
+     * fetches the products that correspond the category Id passed in arg
+     * @param categoryId id the category which we seek its products
+     * @param isNextPage if we want to fetches the next page of the products of a certain category
+     * @param searchString if not null then the user is asking for the products which the names are close to the searchString
+     */
     fun fetch(categoryId : String?, isNextPage : Boolean?, searchString: String?) {
         viewModelScope.launch(Dispatchers.IO) {
+
             if (isNextPage != null) if (isNextPage) ++pageNumber else --pageNumber
 
-            val myService = Service()
+            val myService = ApiHelper()
             val result = myService.getProductsList(categoryId, pageNumber, searchString)
             Log.v(TAG, result)
             if (result != null) {
                 try {
                     // Parse result string JSON to data class
-                    //categories = Klaxon().parse(result)
                     val json = JSONObject(result)
                     val currentPage = json.getInt("currentPage")
                     liveCurrentPage.postValue(currentPage)
@@ -54,11 +53,8 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
                         val price = productObject.getString("salePrice")
                         var rating = productObject.getString("customerReviewAverage")
                         var reviewCount = productObject.getString("customerReviewCount")
-                        /*val name = productObject.getJSONObject("names").getString("title")
-                        val id = productObject.getString("sku")
-                        val imageLink = productObject.getJSONObject("images").getString("standard")
-                        val price = productObject.getJSONObject("prices").getString("current")
-                        val rating = productObject.getJSONObject("customerReviews").getString("averageScore")*/
+
+                        // the Api could send null value so we set a value by default to the rating and reviewCount
                         if (rating == "null") {
                             rating = "5.";
                         }
@@ -70,9 +66,7 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
                         val product = ProductModel(id.toString(), name, imageLink, price, rating, reviewCount, url, false)
                         products.add(product)
                     }
-                    //childrenList.get (0..10)
-                    Log.v(TAG, products.toString())
-                    liveData.postValue(products)
+                    liveProductsList.postValue(products)
 
                 }
                 catch(err:Error) {
@@ -85,6 +79,9 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    /**
+     * adds the product which id is passed in param to the list of the favorites of the current user
+     */
     fun addFavoriteProduct(product : ProductModel) {
         val db = Room.databaseBuilder(
             context,
@@ -92,17 +89,16 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
         ).build()
 
         val productsDao = db.favoriteProductsDao()
-        val userDao = db.userDao()
 
         viewModelScope.launch(Dispatchers.IO) {
             productsDao.insert(Products(0, product.id.toInt(), 121, product.name, product.imageLink, product.price, product.rating, product.reviewCount, product.url))
-
-            val userFavorites = userDao.getUserProducts(121)
-            liveDataUsers.postValue(userFavorites)
-            //db.close()
+            db.close()
         }
     }
 
+    /**
+     * removes the product which id is passed in param from the list of the favorites of the current user
+     */
     fun removeFavoriteProduct(productId : String) {
         val db = Room.databaseBuilder(
             context,
@@ -110,17 +106,17 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
         ).build()
 
         val productsDao = db.favoriteProductsDao()
-        val userDao = db.userDao()
 
         viewModelScope.launch(Dispatchers.IO) {
             productsDao.deleteByProductIdAndUserId(productId.toInt(), 121)
-
-            val userFavorites = userDao.getUserProducts(121)
-            liveDataUsers.postValue(userFavorites)
-            //db.close()
+            db.close()
         }
     }
 
+    /**
+     * verifies if each one of the products of the product list is labeled as favorite by the user
+     * @param products List of the products
+     */
     fun isProductFavorite(products : MutableList<ProductModel>) {
         val db = Room.databaseBuilder(
             context,
@@ -129,23 +125,28 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
 
         viewModelScope.launch(Dispatchers.IO) {
             val userDao = db.userDao()
+            // we get all the favorite products of the user
             val userFavorites = userDao.getUserProducts(121)
 
+            // we verify if each product is present in the list
             if (userFavorites.isNotEmpty()) {
                 val favorites = userFavorites[0].favoritesList
                 for (product in products) {
-
                     val productFavorite = favorites.find {
                         it.productId == product.id.toInt()
                     }
+                    // we set the attribute isFavorite of each product to true or false
                     product.isFavorite = productFavorite != null
                 }
             }
             liveProductsFavorite.postValue(products)
-            //db.close()
+            db.close()
         }
     }
 
+    /**
+     * fetches favorite products list of the current user
+     */
     fun getFavoriteProducts() {
         val db = Room.databaseBuilder(
             context,
@@ -166,7 +167,8 @@ class ProductsListViewModel(application: Application) : AndroidViewModel(applica
                 }
             }
 
-            liveData.postValue(favoriteProducts)
+            liveProductsList.postValue(favoriteProducts)
+            db.close()
         }
     }
 }

@@ -1,7 +1,5 @@
-package com.example.ecommerceapplication
+package com.example.ecommerceapplication.adapter
 
-import android.nfc.Tag
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -13,8 +11,10 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bumptech.glide.Glide
+import com.example.ecommerceapplication.ui.products.ProductsListViewModel
+import com.example.ecommerceapplication.R
 import com.example.ecommerceapplication.model.ProductModel
-import kotlin.math.log
+import com.example.ecommerceapplication.ui.products.ProductsListFragmentDirections
 import kotlin.properties.Delegates
 
 
@@ -29,6 +29,12 @@ class ProductRecyclerViewAdapter(
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var productsIsFavorite = mutableListOf<Boolean>()
 
+    // we will find in this adapter two different view Holders : the one that holds the products (ProductsViewHolder)
+    // and the one that holds the pagination buttons
+    // the logic is to display the pagination buttons only if the position in the recycler view is the last one
+    // otherwise we display the products
+
+
     inner class ProductsViewHolder (itemView:View): RecyclerView.ViewHolder(itemView) {
         var itemTitle : TextView = itemView.findViewById(R.id.ProductTitle1)
         var itemPrice : TextView = itemView.findViewById(R.id.ProductPrice1)
@@ -36,7 +42,6 @@ class ProductRecyclerViewAdapter(
         var itemImage : ImageView = itemView.findViewById(R.id.imageProduct1)
         var itemReviewCount : TextView = itemView.findViewById(R.id.ProductReviewCount)
         var itemFavorite : ImageView = itemView.findViewById(R.id.Favorite)
-        //val holder = ProductsViewHolder(itemView)
 
         lateinit var itemUrl : String
         lateinit var itemId : String
@@ -44,20 +49,24 @@ class ProductRecyclerViewAdapter(
 
         init {
 
+            // handle the click on a product ( we navigate into the ProductDetailFragment )
             itemView.setOnClickListener {
                 val toast = Toast.makeText(itemView.context, itemTitle.text, Toast.LENGTH_LONG)
                 toast.show()
-                val action = ProductsListFragmentDirections.actionProductFragmentToProductDetailsFragment(itemUrl,
-                    itemTitle.text as String
-                )
+                val action =
+                    ProductsListFragmentDirections.actionProductFragmentToProductDetailsFragment(
+                        itemUrl,
+                        itemTitle.text as String
+                    )
                 itemView.findNavController().navigate(action)
             }
 
+            // handle the click on the favorite product ( we have two cases, either the product is already a favorite one so on the click
+            // it gets removed, either it s not a favorite one so it gets added to the database list
             itemFavorite.setOnClickListener {
                 productsIsFavorite[bindingAdapterPosition] = if (productsIsFavorite[bindingAdapterPosition]) {
                     itemFavorite.load(R.drawable.ic_baseline_favorite_border_24)
                     viewModel.removeFavoriteProduct(itemId)
-                    //notifyItemChanged(position, false)
                     false
                 } else {
                     itemFavorite.load(R.drawable.ic_outline_favorite_24)
@@ -75,7 +84,7 @@ class ProductRecyclerViewAdapter(
         var container : ConstraintLayout = itemView.findViewById(R.id.buttonsNextPreviousContainer)
 
         init {
-            var params = container.layoutParams
+            val params = container.layoutParams
             params.width = screenWidth
             container.layoutParams = params
             nextButton.setOnClickListener {
@@ -94,22 +103,22 @@ class ProductRecyclerViewAdapter(
         }
     }
 
-    private val TAG = "Products"
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): RecyclerView.ViewHolder {
+        // we switch between the two view holders based on the viewType returned by the the function getItemViewType
         return if(viewType == R.layout.button_next && categoryId != null) {
             val itemView = LayoutInflater.from(parent.context).inflate(R.layout.button_next, parent, false)
             PaginationButtonsViewHolder(itemView)
         } else {
-            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_3, parent, false);
+            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_3, parent, false)
+            // we register if the products are favorites or not based on the database
             for (product in products) {
                 productsIsFavorite.add(product.isFavorite)
             }
             ProductsViewHolder(itemView)
         }
-        //val v = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_3, parent, false)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads : List<Any>) {
@@ -138,7 +147,6 @@ class ProductRecyclerViewAdapter(
             productsViewHolder.itemUrl = products[position].url
             productsViewHolder.itemIsFavorite = products[position].isFavorite
             productsViewHolder.itemId = products[position].id
-            //productsViewHolder.setFavorite(products[position].isFavorite)
 
             if (!productsIsFavorite[position]) {
                 productsViewHolder.itemFavorite.load(R.drawable.ic_baseline_favorite_border_24)
@@ -147,11 +155,10 @@ class ProductRecyclerViewAdapter(
             }
 
             val imageLink = products[position].imageLink
-            //holder.itemImage.load(imageLink)
             Glide.with(productsViewHolder.itemView.context).load(imageLink).into(productsViewHolder.itemImage);
         } else {
             val buttonsViewHolder = holder as PaginationButtonsViewHolder
-            buttonsViewHolder.container.minWidth = screenWidth.toInt()
+            buttonsViewHolder.container.minWidth = screenWidth
         }
 
 

@@ -1,4 +1,4 @@
-package com.example.ecommerceapplication
+package com.example.ecommerceapplication.ui.productDetail
 
 import androidx.lifecycle.ViewModel
 
